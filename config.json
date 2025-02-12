@@ -1,0 +1,46 @@
+{
+  "global": {
+    "resource_prefix": "projectX",
+    "region": "North Europe",
+    "repo_uri": "https://example.com/repo.git",
+    "private_endpoint_gateway": {
+      "dev": "10.0.1.5",
+      "prod": "10.0.2.5",
+      "qa": "10.0.3.5"
+    }
+  },
+  "environments": {
+    "dev": {
+      "adls": {
+        "existing_account": true,
+        "is_private": true,
+        "account_uri": "https://devadls.dfs.core.windows.net",
+        "account_name": "devadls",
+        "resource_group": "existing-adls-rg"
+      },
+      "databricks": {
+        "is_private": true,
+        "sku": "standard",
+        "cluster_min_workers": 1,
+        "cluster_max_workers": 1
+      },
+      "data_factory": {
+        "is_private": false
+      }
+    },
+    "prod": {
+      "adls": {
+        "existing_account": false
+      },
+      "databricks": {
+        "is_private": true,
+        "sku": "premium",
+        "cluster_min_workers": 1,
+        "cluster_max_workers": 1
+      },
+      "data_factory": {
+        "is_private": true
+      }
+    }
+  }
+}
