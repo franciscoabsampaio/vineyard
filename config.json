@@ -1,6 +1,6 @@
 {
   "global": {
-    "resource_prefix": "projectX",
+    "resource_prefix": "proj",
     "region": "North Europe",
     "repo_uri": "https://example.com/repo.git",
     "private_endpoint_gateway": {
@@ -12,11 +12,10 @@
   "environments": {
     "dev": {
       "adls": {
-        "existing_account": true,
         "is_private": true,
-        "account_uri": "https://devadls.dfs.core.windows.net",
-        "account_name": "devadls",
-        "resource_group": "existing-adls-rg"
+        "existing_account": true,
+        "resource_id": "/subscriptions/f0f49220-ade2-490c-99d5-13aaca9ac593/resourceGroups/cloud-shell-storage-westeurope/providers/Microsoft.Storage/storageAccounts/csb10032002a6ade3f2",
+        "blob_service_endpoint": "https://csb10032002a6ade3f2.blob.core.windows.net/"
       },
       "databricks": {
         "is_private": true,
@@ -30,11 +29,12 @@
     },
     "prod": {
       "adls": {
+        "is_private": true,
         "existing_account": false
       },
       "databricks": {
         "is_private": true,
-        "sku": "premium",
+        "sku": "standard",
         "cluster_min_workers": 1,
         "cluster_max_workers": 1
       },

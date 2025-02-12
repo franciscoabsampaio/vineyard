@@ -1,7 +1,7 @@
 resource "azurerm_key_vault" "env" {
   for_each = local.environments
 
-  name                        = "${local.prefix}-${each.key}-key_vault"
+  name                        = "${local.prefix}-${each.key}-akv"
   location                    = azurerm_resource_group.env[each.key].location
   resource_group_name         = azurerm_resource_group.env[each.key].name
   enabled_for_disk_encryption = true

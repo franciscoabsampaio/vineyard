@@ -23,6 +23,10 @@ variable "subnet_id" {
 }
 
 // Linked Services
+variable "adls_service_endpoint" {
+  type = string
+}
+
 variable "databricks_workspace_id" {
   type = string
 }

@@ -1,3 +1,9 @@
+provider "azurerm" {
+  features {}
+
+  subscription_id = "f0f49220-ade2-490c-99d5-13aaca9ac593"
+}
+
 locals {
   config_data  = jsondecode(file("../config.json"))
   environments = local.config_data.environments

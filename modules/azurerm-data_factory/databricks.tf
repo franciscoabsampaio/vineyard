@@ -21,15 +21,15 @@ resource "azurerm_private_endpoint" "env_to_subnet" {
 }
 
 resource "azurerm_data_factory_linked_service_azure_databricks" "env" {
-  name                = "${local.prefix}-linked_service-databricks"
-  data_factory_id     = azurerm_data_factory.env.id
-  description         = "ADB Linked Service via AKV Access Token"
+  name            = "${local.prefix}-linked_service-databricks"
+  data_factory_id = azurerm_data_factory.env.id
+  description     = "ADB Linked Service via AKV Access Token"
 
   existing_cluster_id = var.databricks_cluster_id
-  adb_domain   = "https://${var.databricks_workspace_url}"
+  adb_domain          = "https://${var.databricks_workspace_url}"
 
   key_vault_password {
-    linked_service_name = 
+    linked_service_name = azurerm_data_factory_linked_service_key_vault.env.name
     secret_name         = "dbw_access_token"
   }
 }
