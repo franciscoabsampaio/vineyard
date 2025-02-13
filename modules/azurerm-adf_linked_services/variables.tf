@@ -1,13 +1,9 @@
-variable "env" {
+variable "data_factory_id" {
   type = string
 }
 
 variable "prefix" {
   type = string
-}
-
-variable "is_private" {
-  type = bool
 }
 
 variable "resource_group_name" {

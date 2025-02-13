@@ -1,5 +1,5 @@
 resource "azurerm_key_vault" "env" {
-  for_each = local.environments
+  for_each = var.environments
 
   name                        = "${local.prefix}-${each.key}-akv"
   location                    = azurerm_resource_group.env[each.key].location
