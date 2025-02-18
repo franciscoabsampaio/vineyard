@@ -1,5 +1,5 @@
 provider "databricks" {
-  host          = local.env.dbw_url
+  host = local.env.dbw_url
   # azure_use_msi = true
   azure_workspace_resource_id = azurerm_databricks_workspace.env[each.key].id
 }

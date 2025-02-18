@@ -1,3 +1,8 @@
+locals {
+  dbw_is_premium = { for k, v in var.environments :
+    k => v.databricks.sku == "premium"
+  }
+}
 resource "azurerm_databricks_workspace" "env" {
   for_each = var.environments
 
@@ -6,8 +11,11 @@ resource "azurerm_databricks_workspace" "env" {
   location            = azurerm_resource_group.env[each.key].location
   sku                 = each.value.databricks.sku
 
+  public_network_access_enabled         = !each.value.databricks.private_frontend
+  network_security_group_rules_required = local.dbw_is_premium[each.key] ? "NoAzureDatabricksRules" : "AllRules"
+
   custom_parameters {
-    no_public_ip = each.value.databricks.sku == "premium"
+    no_public_ip = local.dbw_is_premium[each.key]
 
     virtual_network_id  = azurerm_virtual_network.env[each.key].id
     public_subnet_name  = azurerm_subnet.env_public_databricks[each.key].name

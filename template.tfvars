@@ -19,6 +19,7 @@ environments = {
     },
     databricks = {
       sku                 = "standard", # premium
+      private_frontend    = false, # If set to true, users must connect through a VPN.
       cluster_node_type   = "Standard_DS3_v2",
       cluster_min_workers = 1,
       cluster_max_workers = 1
@@ -34,6 +35,7 @@ environments = {
     },
     databricks = {
       sku                 = "standard", # premium
+      private_frontend    = true, # If set to true, users must connect through a VPN.
       cluster_node_type   = "Standard_DS3_v2",
       cluster_min_workers = 1,
       cluster_max_workers = 1
