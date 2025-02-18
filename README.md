@@ -16,7 +16,7 @@ in response to [HashiCorp's abrupt licensing changes to Terraform](https://opent
 Since, it's been growing rapidly and steadily, with both strong community and industry support, and industry giants like [Oracle have already made the switch](https://www.thestack.technology/oracle-dumps-terraform-for-opentofu/)
 to Terraform's vegan alternative.
 
-Thanks to the Linux foundation's methodologies, OpenTofu has already seen the introduction of long-awaited new features.
+Thanks to the Linux Foundation's methodologies, OpenTofu has already seen the introduction of long-awaited new features.
 
 **Of particular interest to this repository,** the ability to use the [`for_each` argument in `provider` blocks ](https://opentofu.org/docs/language/providers/configuration/#for_each-multiple-instances-of-a-provider-configuration) as of [version 1.9](https://opentofu.org/blog/opentofu-1-9-0/),
 a significant milestone over Hashicorp's Terraform,
@@ -28,7 +28,14 @@ TODO: Diagram
 
 There are two tiers of Databricks workspaces:
 - Standard. Requires a public IP.
-- Premium. Allows for both public and private network implementations. In this project, premium workspaces will always generate private networking resources, such as private endpoints and private links.
+- Premium. Allows for both public and private network implementations. In this project, premium workspaces will always generate private networking resources, such as private endpoints and private links. Regardless, users can still decide if they want to enable private frontends or not.
+
+### root VS env
+
+The repository and workflow are split into `root` and ``env`` for a few reasons:
+- Users may want to deploy critical infrastructure (which, when destroyed, represents permanent business damage and loss of information) and non-critical environment-specific infrastructure from different environments. An example would be CI/CD pipelines in different environments, for each environment.
+- Certain resources are unlikely to be redeployed/altered at a frequent rate. Others, such as cluster size, are more likely to be reconfigured.
+- Sequential generation of the databricks resources per-environment would have required some very rough workarounds if dynamic `provider` blocks were not used. Using `for_each` arguments in `provider` blocks is only possible in OpenTofu 1.9.0 onwards. The Terraform version with which this repository was tested does not support dynamic `provider` blocks - and most likely no future version will.
 
 ## Pre-Requisites
 
@@ -83,3 +90,7 @@ ENV: dev
 RESOURCE_TYPE: dbw
 RESOURCE_NAME: allin
 ```
+
+## Known Bugs / Issues
+
+- Changing an existing Databricks Workspace's `public_network_access_enabled` parameter via the `private_frontend` input variable (`local.tfvars`) causes the Terraform/Tofu runtime to get stuck in `Still modifying...`. Despite the message, if the execution is interrupted, the change is successful, as re-running the plan yields `Your infrastructure matches the configuration.` and the changes can be shown to have taken effect in the workspace.
