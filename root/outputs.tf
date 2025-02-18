@@ -19,6 +19,6 @@ locals {
   }
 }
 
-output "map_of_resources" {
-  value = local.map_of_resources
+output "resources" {
+  value = local.output_resources
 }

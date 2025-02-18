@@ -13,4 +13,4 @@ root:
 	scripts/root.sh
 
 env:
-	scripts/env.sh
+	scripts/env.sh $(filter-out $@, $(MAKECMDGOALS))

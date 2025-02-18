@@ -4,7 +4,7 @@ provider "azurerm" {
 }
 
 locals {
-  root = jsondecode(file("../root.json"))[var.env]
+  root = jsondecode(file("../outputs/root.json")).resources[var.env]
 
   env = var.environments[var.env]
 

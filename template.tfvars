@@ -18,7 +18,8 @@ environments = {
       blob_service_endpoint = "https://xxxxxxxx.blob.core.windows.net/"
     },
     databricks = {
-      sku                 = "standard",
+      sku                 = "standard", # premium
+      cluster_node_type   = "Standard_DS3_v2",
       cluster_min_workers = 1,
       cluster_max_workers = 1
     },
@@ -32,7 +33,8 @@ environments = {
       existing_account = false
     },
     databricks = {
-      sku                 = "standard",
+      sku                 = "standard", # premium
+      cluster_node_type   = "Standard_DS3_v2",
       cluster_min_workers = 1,
       cluster_max_workers = 1
     },

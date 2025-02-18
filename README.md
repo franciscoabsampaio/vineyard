@@ -6,6 +6,10 @@ with Azure Data Factory, Azure Databricks, and an Azure Storage Account.
 
 ## This repository supports both OpenTofu and Terraform
 
+This project was tested on:
+- OpenTofu 1.9.0.
+- Terraform 1.6.0.
+
 [OpenTofu](https://opentofu.org/) was forked from [HashiCorp Terraform](https://www.terraform.io/) and [officially endorsed by the Linux Foundation](https://www.linuxfoundation.org/press/announcing-opentofu)
 in response to [HashiCorp's abrupt licensing changes to Terraform](https://opentofu.org/manifesto/).
 
@@ -22,7 +26,9 @@ a significant milestone over Hashicorp's Terraform,
 
 TODO: Diagram
 
-Databricks workspaces are the exception and can only be created in private network
+There are two tiers of Databricks workspaces:
+- Standard. Requires a public IP.
+- Premium. Allows for both public and private network implementations. In this project, premium workspaces will always generate private networking resources, such as private endpoints and private links.
 
 ## Pre-Requisites
 

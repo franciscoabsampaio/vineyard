@@ -1,7 +1,7 @@
 provider "databricks" {
   host          = local.env.dbw_url
-  azure_use_msi = true
-  # azure_workspace_resource_id = azurerm_databricks_workspace.env[each.key].id
+  # azure_use_msi = true
+  azure_workspace_resource_id = azurerm_databricks_workspace.env[each.key].id
 }
 
 /*
@@ -15,10 +15,6 @@ resource "databricks_group_member" "admin_membership" {
 }
 */
 
-data "databricks_node_type" "smallest" {
-  local_disk = true
-}
-
 data "databricks_spark_version" "latest_lts" {
   long_term_support = true
 }
@@ -26,11 +22,11 @@ data "databricks_spark_version" "latest_lts" {
 resource "databricks_cluster" "env_default" {
   cluster_name            = "${local.prefix}-cluster-default"
   spark_version           = data.databricks_spark_version.latest_lts.id
-  node_type_id            = data.databricks_node_type.smallest.id
+  node_type_id            = local.env.databricks.cluster_node_type
   autotermination_minutes = 60
 
   autoscale {
-    min_workers = local.env.databricks.min_workers
-    max_workers = 1
+    min_workers = local.env.databricks.cluster_min_workers
+    max_workers = local.env.databricks.cluster_max_workers
   }
 }
