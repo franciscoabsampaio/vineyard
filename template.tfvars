@@ -13,7 +13,7 @@ environments = {
   dev = {
     adls = {
       is_private            = true,
-      existing_account      = true,
+      create_new      = false,
       resource_id           = "/subscriptions/0000000-xxxx-xxxx-xxxx-000000000000/resourceGroups/proj-dev-rg/providers/Microsoft.Storage/storageAccounts/xxxxxxxx",
       blob_service_endpoint = "https://xxxxxxxx.blob.core.windows.net/"
     },
@@ -31,7 +31,7 @@ environments = {
   prod = {
     adls = {
       is_private       = true,
-      existing_account = false
+      create_new = true
     },
     databricks = {
       sku                 = "standard", # premium

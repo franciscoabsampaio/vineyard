@@ -1,20 +1,23 @@
 locals {
-  output_resources = { for k, v in var.environments :
-    k => {
-      resource_group_name     = azurerm_resource_group.env[k].name
-      resource_group_location = azurerm_resource_group.env[k].location
+  output_resources = { for env, resource in var.environments :
+    env => {
+      resource_group_name     = azurerm_resource_group.env[env].name
+      resource_group_location = azurerm_resource_group.env[env].location
 
-      subnet_id = azurerm_subnet.env_default[k].id
+      subnet_id = azurerm_subnet.env_default[env].id
 
-      adf_id = azurerm_data_factory.env[k].id
-      adls_service_endpoint = (
-        v.adls.existing_account ?
-        v.adls.blob_service_endpoint :
-        azurerm_storage_account.env[k].primary_blob_endpoint
-      )
-      akv_id  = azurerm_key_vault.env[k].id
-      dbw_id  = azurerm_databricks_workspace.env[k].id
-      dbw_url = azurerm_databricks_workspace.env[k].workspace_url
+      adf_id = azurerm_data_factory.env[env].id
+      adls_service_endpoints = {
+        for k_adls, v_adls in local.map_of_storage_accounts : k_adls => (
+          v_adls.create_new ?
+          azurerm_storage_account.env_name[k_adls].primary_blob_endpoint :
+          v_adls.blob_service_endpoint
+        )
+        if v_adls.environment == env
+      }
+      akv_id  = azurerm_key_vault.env[env].id
+      dbw_id  = azurerm_databricks_workspace.env[env].id
+      dbw_url = azurerm_databricks_workspace.env[env].workspace_url
     }
   }
 }

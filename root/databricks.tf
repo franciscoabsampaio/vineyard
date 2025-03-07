@@ -3,6 +3,7 @@ locals {
     k => v.databricks.sku == "premium"
   }
 }
+
 resource "azurerm_databricks_workspace" "env" {
   for_each = var.environments
 

@@ -10,7 +10,7 @@ fmt:
 	tf fmt -recursive
 
 root:
-	scripts/root.sh
+	scripts/root.sh $(filter-out $@, $(MAKECMDGOALS))
 
 env:
 	scripts/env.sh $(filter-out $@, $(MAKECMDGOALS))
