@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2025-03-07T16:44:57.406Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36 Edg/133.0.0.0" etag="I-SsS6UcFY1B0E1EGiPu" version="24.0.7" type="github">
+<mxfile host="app.diagrams.net" modified="2025-03-07T16:47:37.556Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36 Edg/133.0.0.0" etag="iC7G0u0p3c8OLXhRThRm" version="24.0.7" type="github">
   <diagram name="Page-1" id="SkEKgCQDsDRQQQ8Bk1pQ">
-    <mxGraphModel dx="2597" dy="2617" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="742" dy="1533" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -199,16 +199,16 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="ZaWyxYJnoPDAj6jRP7Kb-66" value="&lt;b&gt;Storage Accounts&lt;/b&gt;&lt;div&gt;env-adls_&lt;b&gt;&lt;i&gt;name&lt;/i&gt;&lt;/b&gt;&lt;/div&gt;" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/storage/Storage_Accounts.svg;" vertex="1" parent="1">
+        <mxCell id="ZaWyxYJnoPDAj6jRP7Kb-66" value="&lt;b&gt;Storage Accounts&lt;/b&gt;&lt;div&gt;env-adls_&lt;b&gt;[NAME]&lt;/b&gt;&lt;/div&gt;" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/storage/Storage_Accounts.svg;" vertex="1" parent="1">
           <mxGeometry x="510" y="320" width="65" height="52" as="geometry" />
         </mxCell>
-        <mxCell id="ZaWyxYJnoPDAj6jRP7Kb-67" value="&lt;b&gt;Private Endpoint&lt;/b&gt;&lt;div&gt;env-pe_adls_&lt;b&gt;name&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Connects to existing storage accounts.&lt;/div&gt;" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/other/Private_Endpoints.svg;" vertex="1" parent="1">
+        <mxCell id="ZaWyxYJnoPDAj6jRP7Kb-67" value="&lt;b&gt;Private Endpoint&lt;/b&gt;&lt;div&gt;env-pe_adls_&lt;b&gt;[NAME]&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Connects to existing storage accounts.&lt;/div&gt;" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/other/Private_Endpoints.svg;" vertex="1" parent="1">
           <mxGeometry x="510" y="177.66" width="68" height="64.68" as="geometry" />
         </mxCell>
         <mxCell id="ZaWyxYJnoPDAj6jRP7Kb-76" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;strokeColor=#00E000;strokeWidth=2;" edge="1" parent="1" source="ZaWyxYJnoPDAj6jRP7Kb-72" target="ZaWyxYJnoPDAj6jRP7Kb-73">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="ZaWyxYJnoPDAj6jRP7Kb-72" value="&lt;b&gt;Linked Service&lt;/b&gt;&lt;div&gt;env-linked_service-adls&lt;/div&gt;" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/networking/Private_Link_Hub.svg;" vertex="1" parent="1">
+        <mxCell id="ZaWyxYJnoPDAj6jRP7Kb-72" value="&lt;b&gt;Linked Service&lt;/b&gt;&lt;div&gt;env-linked_service-adls_&lt;b&gt;[NAME]&lt;/b&gt;&lt;/div&gt;" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/networking/Private_Link_Hub.svg;" vertex="1" parent="1">
           <mxGeometry x="1140" y="320" width="58.8" height="68" as="geometry" />
         </mxCell>
         <mxCell id="ZaWyxYJnoPDAj6jRP7Kb-77" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;strokeColor=#00E000;strokeWidth=2;" edge="1" parent="1" source="ZaWyxYJnoPDAj6jRP7Kb-73" target="ZaWyxYJnoPDAj6jRP7Kb-74">
@@ -257,7 +257,7 @@
         <mxCell id="ZaWyxYJnoPDAj6jRP7Kb-12" value="&lt;b&gt;Key Vault&lt;/b&gt;&lt;div&gt;env-akv&lt;/div&gt;" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/security/Key_Vaults.svg;" vertex="1" parent="1">
           <mxGeometry x="880" y="533.0000000000001" width="68" height="68" as="geometry" />
         </mxCell>
-        <mxCell id="ZaWyxYJnoPDAj6jRP7Kb-87" value="&lt;b&gt;Databricks Cluster&lt;/b&gt;&lt;div&gt;env-cluster_shared&lt;/div&gt;" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/databases/Virtual_Clusters.svg;" vertex="1" parent="1">
+        <mxCell id="ZaWyxYJnoPDAj6jRP7Kb-87" value="&lt;b&gt;Databricks Shared Clusters&lt;/b&gt;&lt;div&gt;env-cluster_shared_&lt;b&gt;[NAME]&lt;/b&gt;&lt;/div&gt;" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/databases/Virtual_Clusters.svg;" vertex="1" parent="1">
           <mxGeometry x="1870" y="13.4" width="66" height="64" as="geometry" />
         </mxCell>
         <mxCell id="ZaWyxYJnoPDAj6jRP7Kb-88" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;Era fixe poder passar uma lista de cluster definitions.&lt;/h1&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
@@ -266,7 +266,7 @@
         <mxCell id="ZaWyxYJnoPDAj6jRP7Kb-89" value="&lt;h1 style=&quot;color: rgb(0, 0, 0); font-family: Helvetica; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(251, 251, 251); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; margin-top: 0px;&quot;&gt;List of storage accounts &amp;amp; list of containers&lt;/h1&gt;" style="text;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="610" y="-290" width="560" height="100" as="geometry" />
         </mxCell>
-        <mxCell id="ZaWyxYJnoPDAj6jRP7Kb-90" value="&lt;b&gt;Storage Containers&lt;/b&gt;&lt;div&gt;env-adls_container_&lt;b&gt;&lt;i&gt;name&lt;/i&gt;&lt;/b&gt;&lt;/div&gt;" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/general/Storage_Container.svg;" vertex="1" parent="1">
+        <mxCell id="ZaWyxYJnoPDAj6jRP7Kb-90" value="&lt;b&gt;Storage Containers&lt;/b&gt;&lt;div&gt;env-adls_container_&lt;b&gt;[NAME]&lt;/b&gt;&lt;/div&gt;" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/general/Storage_Container.svg;" vertex="1" parent="1">
           <mxGeometry x="1140" y="190.34" width="64" height="52" as="geometry" />
         </mxCell>
         <mxCell id="ZaWyxYJnoPDAj6jRP7Kb-107" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="ZaWyxYJnoPDAj6jRP7Kb-92" target="ZaWyxYJnoPDAj6jRP7Kb-106">
@@ -294,7 +294,7 @@
         <mxCell id="ZaWyxYJnoPDAj6jRP7Kb-97" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="ZaWyxYJnoPDAj6jRP7Kb-95" target="ZaWyxYJnoPDAj6jRP7Kb-93">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="ZaWyxYJnoPDAj6jRP7Kb-95" value="&lt;div&gt;&lt;b&gt;Role Assignment&lt;/b&gt;&lt;/div&gt;&lt;div&gt;env-role_assignment-adls_&lt;b&gt;&lt;i&gt;name&lt;/i&gt;&lt;/b&gt;&lt;/div&gt;" style="shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#4495D1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.2d.role;labelBackgroundColor=default;" vertex="1" parent="1">
+        <mxCell id="ZaWyxYJnoPDAj6jRP7Kb-95" value="&lt;div&gt;&lt;b&gt;Role Assignment&lt;/b&gt;&lt;/div&gt;&lt;div&gt;env-role_assignment-adls_&lt;b&gt;[NAME]&lt;/b&gt;&lt;/div&gt;" style="shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#4495D1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.2d.role;labelBackgroundColor=default;" vertex="1" parent="1">
           <mxGeometry x="1153.6" y="20" width="36.8" height="50.8" as="geometry" />
         </mxCell>
         <mxCell id="ZaWyxYJnoPDAj6jRP7Kb-104" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="ZaWyxYJnoPDAj6jRP7Kb-98" target="ZaWyxYJnoPDAj6jRP7Kb-101">
