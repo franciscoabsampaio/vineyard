@@ -1,6 +1,6 @@
 provider "azurerm" {
   features {}
-  subscription_id = var.global.subscription_id
+  subscription_id = var.subscription_id
 }
 
 locals {
@@ -8,5 +8,5 @@ locals {
 
   env = var.environments[var.env]
 
-  prefix = "${var.global.resource_prefix}-${var.env}"
+  prefix = "${var.resource_prefix}-${var.env}"
 }

@@ -1,8 +1,5 @@
 # Global variables
-resource_prefix = "proj"
 region          = "North Europe"
-repo_uri        = "https://example.com/repo.git"
-subscription_id = "0000000-xxxx-xxxx-xxxx-000000000000"
 private_endpoint_gateway = {
   dev  = "10.0.1.5"
   prod = "10.0.2.5"
@@ -14,7 +11,7 @@ environments = {
     adls = {
       is_private            = true,
       create_new      = false,
-      resource_id           = "/subscriptions/0000000-xxxx-xxxx-xxxx-000000000000/resourceGroups/proj-dev-rg/providers/Microsoft.Storage/storageAccounts/xxxxxxxx",
+      resource_id           = "resourceGroups/proj-dev-rg/providers/Microsoft.Storage/storageAccounts/xxxxxxxx",
       blob_service_endpoint = "https://xxxxxxxx.blob.core.windows.net/"
     },
     databricks = {

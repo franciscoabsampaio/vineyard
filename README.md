@@ -1,17 +1,18 @@
-# Infrastructure-as-Code Framework
+<div align="center">
+  <img src="./docs/assets/logo.png">
+</div>
 
-This project is a set of plug-and-play [infrastructure-as-code](https://www.hashicorp.com/en/resources/what-is-infrastructure-as-code)
-plans that programmatically generate an Azure data lakehouse infrastructure,
-with Azure Data Factory, Azure Databricks, and an Azure Storage Account.
+**vineyard** is an [infrastructure-as-code](https://www.hashicorp.com/en/resources/what-is-infrastructure-as-code) CLI that leverages plug-and-play Terraform/OpenTofu
+plans to programmatically generate a data infrastructure.
 
-## This repository supports both OpenTofu and Terraform
+## This repository supports OpenTofu and Terraform
 
 This project was tested on:
 
 - OpenTofu 1.9.0.
 - Terraform 1.6.0.
 
-Refer to our [brief explanation of the birth of OpenTofu](./docs/opentofu-vs-terraform.md).
+Refer to our [brief explanation of why we prefer OpenTofu](./docs/opentofu-vs-terraform.md).
 
 ## Architecture
 

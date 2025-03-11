@@ -65,7 +65,7 @@ resource "azurerm_private_endpoint" "adls" {
 
   private_service_connection {
     name                           = "${local.prefix}-${each.value.environment}-psc_adls_${each.value.name}"
-    private_connection_resource_id = each.value.resource_id
+    private_connection_resource_id = "${var.subscription_id}/${each.value.resource_id}"
     is_manual_connection           = false
     subresource_names              = ["blob"]
   }
