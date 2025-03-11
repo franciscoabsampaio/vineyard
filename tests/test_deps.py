@@ -1,0 +1,97 @@
+import os
+import pytest
+from vineyard.dependency_graph import DependencyGraph
+import networkx as nx
+
+
+@pytest.fixture
+def graph(tmp_path):
+    # Create a fake folder structure with dependency config files
+    (tmp_path / "A").mkdir()
+    (tmp_path / "B").mkdir()
+    (tmp_path / "C").mkdir()
+    (tmp_path / "C/D").mkdir()  # Nested folder
+
+    # Create dependency files
+    (tmp_path / "A" / "_deps.conf").write_text("")        # A has no dependencies
+    (tmp_path / "B" / "_deps.conf").write_text("#commentlikeandsubscribe\nA\n")     # B depends on A
+    (tmp_path / "C" / "_deps.conf").write_text("A\nB\n")  # C depends on A and B
+    (tmp_path / "C/D" / "_deps.conf").write_text("A\nC\n")  # D depends on A and C (and, indirectly, B)
+
+    # Return the DependencyGraph instance
+    return DependencyGraph().from_path_to_plans(str(tmp_path))
+
+
+def test_dependency_graph_ignores_conf_file_comments(graph):
+    # Assertions
+    assert isinstance(graph, DependencyGraph)
+    assert "#commentlikeandsubscribe" not in set(graph.nodes)
+
+
+def test_dependency_graph_mirrors_the_file_structure(graph, tmp_path):
+    """
+    Test that build_dependency_graph correctly constructs the dependency graph.
+    """
+    # Assertions
+    assert isinstance(graph, DependencyGraph)
+    assert graph.path_to_plans == str(tmp_path)
+    assert set(graph.nodes) == {"A", "B", "C", "C/D"}  # All nodes exist
+    # Also, a node's name consists of the relative path from the tmp_path
+    assert set(graph.edges) == {
+        ("A", "B"),
+        ("A", "C"),
+        ("A", "C/D"),
+        ("B", "C"),
+        ("C", "C/D")
+    }  # Correct dependencies
+
+
+def test_save_graph_png_file_exists(graph, tmp_path):
+    graph.save_to_png(target_directory=str(tmp_path))
+    assert os.path.isfile(os.path.join(str(tmp_path), "graph.png"))
+
+
+def test_find_all_dependencies(graph):
+    # Test when starting from 'A'
+    dependencies_a = graph.find_all_dependencies('A')
+    assert dependencies_a == {'A'}  # A has no dependencies, just itself
+
+    # Test when starting from 'B'
+    dependencies_b = graph.find_all_dependencies('B')
+    assert dependencies_b == {'A', 'B'}  # B depends on A only
+
+    # Test when starting from 'C'
+    dependencies_c = graph.find_all_dependencies('C')
+    assert dependencies_c == {'A', 'B', 'C'}  # C depends on A and B
+
+    # Test when starting from 'C/D'
+    dependencies_d = graph.find_all_dependencies('C/D')
+    assert dependencies_d == {'A', 'B', 'C', 'C/D'}  # D depends on all nodes, even B (indirectly)
+
+
+def test_from_dependency_subgraph(graph):
+    """
+    Test the from_dependency_subgraph function.
+    """
+
+    # Test for 'A', which should only return node A (no dependencies)
+    new_graph_a = graph.from_dependency_subgraph('A')
+    assert sorted(new_graph_a.nodes) == ['A']
+    assert list(new_graph_a.edges) == []  # No edges in the subgraph for A
+    
+    # Test for 'B', which should return a subgraph with nodes A, and B
+    new_graph_b = graph.from_dependency_subgraph('B')
+    assert sorted(new_graph_b.nodes) == sorted(['A', 'B'])
+    assert ('A', 'B') in new_graph_b.edges  # Edge from A to B should be present
+
+    # Test for 'C', which should return a subgraph with nodes A, B, and C
+    new_graph_c = graph.from_dependency_subgraph('C')
+    assert sorted(new_graph_c.nodes) == sorted(['A', 'B', 'C'])
+    assert ('A', 'B') in new_graph_c.edges  # Edge from A to C should be present
+    assert ('A', 'C') in new_graph_c.edges  # Edge from A to C should be present
+    assert ('B', 'C') in new_graph_c.edges  # Edge from A to C should be present
+
+    # Test for 'D', which should return all nodes
+    new_graph_d = graph.from_dependency_subgraph('C/D')
+    assert sorted(graph.nodes) == sorted(new_graph_d.nodes)
+    assert sorted(graph.edges) == sorted(new_graph_d.edges)

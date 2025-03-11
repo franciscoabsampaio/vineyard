@@ -10,12 +10,7 @@ mkdir -p "$INSTALL_DIR"
 # Create the script
 cat << 'EOF' > "$SCRIPT_PATH"
 #!/bin/bash
-runner=$(which terraform || which tofu)
-
-if [ -z "$runner" ]; then
-    echo "Neither Terraform nor OpenTofu are installed. Exiting..."
-    exit 1
-fi
+"$runner" "$@"
 
 if [ -f ../config.json ];then
     echo "Please create a config.json file in the repository root."

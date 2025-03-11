@@ -1,10 +1,24 @@
-# JSON
+# Outputs
 outputs/
 outputs/*
 
 # .env
 .env
 !template.env
+
+# Python
+.idea/
+.vscode/
+.venv*/
+venv*/
+.env*/
+env*/
+__pycache__/
+dist/
+.coverage*
+htmlcov/
+.tox/
+docs/_build/
 
 # Local .terraform directories
 **/.terraform/*

@@ -2,8 +2,8 @@
   <img src="./docs/assets/logo.png">
 </div>
 
-**vineyard** is an [infrastructure-as-code](https://www.hashicorp.com/en/resources/what-is-infrastructure-as-code) CLI that leverages plug-and-play Terraform/OpenTofu
-plans to programmatically generate a data infrastructure.
+**vineyard** is an [infrastructure-as-code](https://www.hashicorp.com/en/resources/what-is-infrastructure-as-code) CLI that leverages opinionated, modular, plug-and-play Terraform/OpenTofu
+plans to programmatically generate data and analytics infrastructures.
 
 ## This repository supports OpenTofu and Terraform
 
