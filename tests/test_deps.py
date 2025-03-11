@@ -34,7 +34,6 @@ def test_dependency_graph_mirrors_the_file_structure(graph, tmp_path):
     """
     # Assertions
     assert isinstance(graph, DependencyGraph)
-    assert graph.path_to_plans == str(tmp_path)
     assert set(graph.nodes) == {"A", "B", "C", "C/D"}  # All nodes exist
     # Also, a node's name consists of the relative path from the tmp_path
     assert set(graph.edges) == {

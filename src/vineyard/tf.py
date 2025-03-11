@@ -1,5 +1,8 @@
+import click
+import os
 import subprocess
-from typing import Literal
+from vineyard.dependency_graph import DependencyGraph
+from vineyard.io import read_temp_file, update_temp_file, echo
 
 SUPPORTED_RUNNERS=["terraform", "tofu"]
 
@@ -23,9 +26,27 @@ def load_runners() -> list[str]:
     return runners
 
 
-def tf(env: str, runner: Literal["tofu", "terraform"] = "tofu"):
-    """
-    args:
-        runner: By default, the runner is set to tofu.
-    """
-    runners_available = load_runners()
+def tf(runner: str, cmd: str, path_to_plans: str, plan: str):
+    echo(f"Running command {cmd} for plan {plan}.", log_level="INFO")
+    subprocess.run(args=[runner, cmd], cwd=os.path.join(path_to_plans, plan))
+
+
+def init(plan, path_to_plans, plans, runner, recursive, upgrade):
+    set_of_plans = set(plans.nodes) if recursive else {plan}
+
+    plans_already_initialized = read_temp_file("init_status") if not upgrade else set()
+    plans_to_initialize = set_of_plans - plans_already_initialized
+
+    for plan in plans_to_initialize:
+        tf(runner, "init", path_to_plans, plan)
+
+    update_temp_file("init_status", plans_to_initialize)
+
+
+# tf plan
+
+
+# tf apply
+
+
+# tf destroy

@@ -1,8 +1,8 @@
-import click
 import matplotlib.pyplot as plt
 import networkx as nx
 import os
 from typing import Self
+from vineyard.io import DIRECTORY_OUTPUT, echo
 
 
 class DependencyGraph(nx.DiGraph):
@@ -10,8 +10,6 @@ class DependencyGraph(nx.DiGraph):
         """
         Scans all subfolders in the path_to_plans directory and builds a dependency graph.
         """
-        self.path_to_plans = path_to_plans
-
         for (root, _, files) in os.walk(path_to_plans, topdown=True):
             if "_deps.conf" in files:
                 plan_name = root.split(path_to_plans)[-1].strip("/")
@@ -28,12 +26,12 @@ class DependencyGraph(nx.DiGraph):
         return self
 
 
-    def save_to_png(self, target_directory: str = "./outputs"):
+    def save_to_png(self, target_directory: str = DIRECTORY_OUTPUT):
         plt.figure(figsize=(8, 5))
         nx.draw(self, with_labels=True, node_color="lightblue", edge_color="gray", arrowsize=20)
         plt.savefig(os.path.join(target_directory, "graph.png"), dpi=300)
 
-        click.echo(f"graph.png was saved to {target_directory}.")
+        echo(f"graph.png was saved to {target_directory}.", log_level="INFO")
 
 
     def find_all_dependencies(self, node: str, visited=None) -> set:
@@ -65,12 +63,6 @@ class DependencyGraph(nx.DiGraph):
 
         # Get all dependencies (parents) of the given node
         dependencies = self.find_all_dependencies(node)
-
-        # # Create a new DependencyGraph object
-        # subgraph = 
-        # new_dependency_graph = DependencyGraph()
-        # new_dependency_graph.add_nodes_from(subgraph.nodes)
-        # new_dependency_graph.add_edges_from(subgraph.edges)
 
         # Return the new dependency graph containing the node and its dependencies
         return self.subgraph(dependencies)

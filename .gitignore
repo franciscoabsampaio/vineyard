@@ -1,6 +1,8 @@
 # Outputs
 outputs/
 outputs/*
+**/outputs/
+**/outputs/*
 
 # .env
 .env

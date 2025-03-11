@@ -1,5 +1,5 @@
 variable "subscription_id" {
-  type = string
+  type      = string
   sensitive = true
 }
 
