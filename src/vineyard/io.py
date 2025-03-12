@@ -32,20 +32,22 @@ def update_temp_file(filename: str, new_lines: list[str], dir: str = DIRECTORY_T
         f.writelines(contents)
 
 
-def echo(message: str, log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO") -> None:
+def echo(message: str, log_level: Literal["DEBUG", "INFO", "SUCCESS", "WARNING", "ERROR"] = "INFO") -> None:
     """Custom logging function with color-coded output."""
     global_log_level = os.getenv("VINEYARD_LOG_LEVEL", 1)
 
-    if ["DEBUG", "INFO", "WARNING", "ERROR"].index(log_level) < global_log_level:
+    if ["DEBUG", "INFO", "SUCCESS", "WARNING", "ERROR"].index(log_level) < global_log_level:
         return  # Suppress messages below the global log level
 
     message = f"{datetime.now().time().isoformat(timespec='seconds')} vineyard: [{log_level}] {message}"
 
     match log_level:
         case "DEBUG":
-            click.secho(message, fg="green")
+            click.secho(message)
         case "INFO":
             click.secho(message, fg="blue", bold=True)
+        case "SUCCESS":
+            click.secho(message, fg="green", bold=True)
         case "WARNING":
             click.secho(message, fg="yellow")
         case "ERROR":
