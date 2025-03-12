@@ -52,7 +52,17 @@ def option_recursive(function: callable):
     )(function)
 
 
+def option_upgrade(function: callable):
+    return click.option(
+        '--upgrade', '-u', '-upgrade',
+        default=False,
+        is_flag=True,
+        help="Pass -upgrade flag to 'RUNNER init'."
+    )(function)
+
+
 def options_tf(function: callable):
+    function = option_upgrade(function)
     function = option_recursive(function)
     function = option_runner(function)
     function = option_path_to_library(function)

@@ -24,7 +24,7 @@ def read_file(filename: str, dir: str = 'tmp') -> set[str]:
 
 
 def update_file(filename: str, new_lines: list[str], dir: str = 'tmp') -> set[str]:
-    contents = read_file(filename)
+    contents = read_file(filename, dir)
 
     for line in new_lines:
         contents.add(line)

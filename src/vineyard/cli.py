@@ -42,12 +42,6 @@ def fmt(runner: str):
 # init
 @cli.command()
 @options_tf
-@click.option(
-    '--upgrade', '-u', '-upgrade',
-    default=False,
-    is_flag=True,
-    help="Pass -upgrade flag to 'RUNNER init'."
-)
 def init(plan: str, path_to_library: str, runner: str, recursive: bool, upgrade: bool):
     """
     Initialize all infrastructure plans.
@@ -68,25 +62,19 @@ def init(plan: str, path_to_library: str, runner: str, recursive: bool, upgrade:
     Additionally, saves JSON output to a file.
     """
 )
-def validate(plan: str, path_to_library: str, runner: str, recursive: bool, json: bool):
+def validate(plan: str, path_to_library: str, runner: str, recursive: bool, upgrade: bool, json: bool):
     """
     Validate plans' syntax and correctness.
     By default, runs 'RUNNER init -upgrade' prior to execution.
     Plans that fail to 'init' are not validated.
     """
-    tf.validate(plan, path_to_library, runner, recursive, json)
+    tf.validate(plan, path_to_library, runner, recursive, upgrade, json)
 
 
 ########################
 # plan
 @cli.command()
 @options_tf
-@click.option(
-    '--upgrade', '-u', '-upgrade',
-    default=False,
-    is_flag=True,
-    help="Pass -upgrade flag to 'RUNNER init'."
-)
 def plan(plan: str, path_to_library: str, runner: str, recursive: bool, upgrade: bool):
     """
     ???
