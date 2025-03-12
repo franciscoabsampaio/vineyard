@@ -6,13 +6,13 @@ from vineyard.io import DIRECTORIES, echo
 
 
 class DependencyGraph(nx.DiGraph):
-    def from_path_to_plans(self, path_to_plans: str) -> Self:
+    def from_library(self, path_to_library: str) -> Self:
         """
-        Scans all subfolders in the path_to_plans directory and builds a dependency graph.
+        Scans all subfolders in the path_to_library directory and builds a dependency graph.
         """
-        for (root, _, files) in os.walk(path_to_plans, topdown=True):
+        for (root, _, files) in os.walk(path_to_library, topdown=True):
             if "_deps.conf" in files:
-                plan_name = root.split(path_to_plans)[-1].strip("/")
+                plan_name = root.split(path_to_library)[-1].strip("/")
                 self.add_node(plan_name)
 
                 with open(f"{root}/_deps.conf", "r") as f:

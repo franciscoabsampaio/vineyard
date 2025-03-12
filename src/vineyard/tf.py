@@ -29,17 +29,17 @@ def tf(
     plan: str,
     runner: str,
     cmd: str,
-    path_to_plans: str,
+    path_to_library: str,
     save_output: bool = False,
 ) -> int:
-    echo(f"tf('{plan}', '{runner}', '{cmd}', '{path_to_plans}', {save_output})", log_level="DEBUG")
+    echo(f"tf('{plan}', '{runner}', '{cmd}', '{path_to_library}', {save_output})", log_level="DEBUG")
 
     echo(f"Running command '{cmd}' for plan '{plan}'.", log_level="INFO")
     
     try:
         output = subprocess.run(
             args=[runner, cmd],
-            cwd=os.path.join(path_to_plans, plan),
+            cwd=os.path.join(path_to_library, plan),
             check=True,
             capture_output=save_output,
         )
@@ -65,10 +65,10 @@ def tf_loop(
     }
 
 
-def init(plan, path_to_plans, runner, recursive, upgrade) -> set[str]:
+def init(plan, path_to_library, runner, recursive, upgrade) -> set[str]:
     set_of_plans = set(
         DependencyGraph()
-        .from_path_to_plans(path_to_plans)
+        .from_library(path_to_library)
         .from_dependency_subgraph(plan).nodes
     ) if recursive else {plan}
 
@@ -81,7 +81,7 @@ def init(plan, path_to_plans, runner, recursive, upgrade) -> set[str]:
 
     set_of_plans_initialized.update(tf_loop(
         set_of_plans_to_initialize,
-        runner, f"init {' -upgrade' if upgrade else ''}", path_to_plans,
+        runner, f"init {' -upgrade' if upgrade else ''}", path_to_library,
     ))
 
     update_file("init_status", set_of_plans_initialized)
@@ -89,24 +89,24 @@ def init(plan, path_to_plans, runner, recursive, upgrade) -> set[str]:
     return set_of_plans_initialized
 
 
-def validate(plan, path_to_plans, runner, recursive, json) -> set[str]:
-    set_of_plans_initialized = init(plan, path_to_plans, runner, recursive, upgrade=True)
+def validate(plan, path_to_library, runner, recursive, json) -> set[str]:
+    set_of_plans_initialized = init(plan, path_to_library, runner, recursive, upgrade=True)
 
     set_of_plans_validated = tf_loop(
         set_of_plans_initialized,
-        runner, f"validate{' -json' if json else ''}", path_to_plans,
+        runner, f"validate{' -json' if json else ''}", path_to_library,
         save_output=json,
     )
 
     return set_of_plans_validated
 
 
-def plan(plan, path_to_plans, runner, recursive, json) -> set[str]:
-    set_of_plans_initialized = init(plan, path_to_plans, runner, recursive, upgrade=True)
+def plan(plan, path_to_library, runner, recursive, json) -> set[str]:
+    set_of_plans_initialized = init(plan, path_to_library, runner, recursive, upgrade=True)
 
     set_of_plans_planned = tf_loop(  # lol
         set_of_plans_initialized,
-        runner, f"plan{' -json' if json else ''}", path_to_plans,
+        runner, f"plan{' -json' if json else ''}", path_to_library,
     )
 
     return set_of_plans_planned

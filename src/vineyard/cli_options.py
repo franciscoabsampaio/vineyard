@@ -12,11 +12,11 @@ def option_env(function: callable):
     )(function)
 
 
-def option_path_to_plans(function: callable):
+def option_path_to_library(function: callable):
     return click.option(
-        '--path-to-plans', '-p', '-path-to-plans',
+        '--path-to-library', '-p', '-path-to-library',
         help='Path to the directory with all infrastructure plans.',
-        default='./tf-plans',
+        default='./library',
         show_default=True,
     )(function)
 
@@ -55,7 +55,7 @@ def option_recursive(function: callable):
 def options_tf(function: callable):
     function = option_recursive(function)
     function = option_runner(function)
-    function = option_path_to_plans(function)
+    function = option_path_to_library(function)
     function = argument_plan(function)
 
     return function

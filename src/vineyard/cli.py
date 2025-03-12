@@ -48,11 +48,11 @@ def fmt(runner: str):
     is_flag=True,
     help="Pass -upgrade flag to 'RUNNER init'."
 )
-def init(plan: str, path_to_plans: str, runner: str, recursive: bool, upgrade: bool):
+def init(plan: str, path_to_library: str, runner: str, recursive: bool, upgrade: bool):
     """
     Initialize all infrastructure plans.
     """
-    tf.init(plan, path_to_plans, runner, recursive, upgrade)
+    tf.init(plan, path_to_library, runner, recursive, upgrade)
 
 
 ########################
@@ -68,13 +68,13 @@ def init(plan: str, path_to_plans: str, runner: str, recursive: bool, upgrade: b
     Additionally, saves JSON output to a file.
     """
 )
-def validate(plan: str, path_to_plans: str, runner: str, recursive: bool, json: bool):
+def validate(plan: str, path_to_library: str, runner: str, recursive: bool, json: bool):
     """
     Validate plans' syntax and correctness.
     By default, runs 'RUNNER init -upgrade' prior to execution.
     Plans that fail to 'init' are not validated.
     """
-    tf.validate(plan, path_to_plans, runner, recursive, json)
+    tf.validate(plan, path_to_library, runner, recursive, json)
 
 
 ########################
@@ -87,8 +87,8 @@ def validate(plan: str, path_to_plans: str, runner: str, recursive: bool, json: 
     is_flag=True,
     help="Pass -upgrade flag to 'RUNNER init'."
 )
-def plan(plan: str, path_to_plans: str, runner: str, recursive: bool, upgrade: bool):
+def plan(plan: str, path_to_library: str, runner: str, recursive: bool, upgrade: bool):
     """
     ???
     """
-    tf.plan(plan, path_to_plans, runner, recursive, upgrade)
+    tf.plan(plan, path_to_library, runner, recursive, upgrade)

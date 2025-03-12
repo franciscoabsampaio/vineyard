@@ -19,7 +19,7 @@ def graph(tmp_path):
     (tmp_path / "C/D" / "_deps.conf").write_text("A\nC\n")  # D depends on A and C (and, indirectly, B)
 
     # Return the DependencyGraph instance
-    return DependencyGraph().from_path_to_plans(str(tmp_path))
+    return DependencyGraph().from_library(str(tmp_path))
 
 
 def test_dependency_graph_ignores_conf_file_comments(graph):
