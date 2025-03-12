@@ -106,14 +106,18 @@ class DependencyGraph(nx.DiGraph):
         queue = deque([node for node in self.nodes if degree[node] == 0])
 
         sorted_nodes = []
-
         while queue:
-            node = queue.popleft()
+            node = queue.popleft()  # Process the next available node
             sorted_nodes.append(node)
 
+            # Get the node's relative
             relatives = self.predecessors(node) if reverse else self.successors(node)
+
             for relative in relatives:
-                degree[relative] -= 1
+                degree[relative] -= 1  # Reduce the in-degree (or out-degree for reverse)
+                
+                # If the node's relative now has no remaining dependencies,
+                # add the relative to the queue
                 if degree[relative] == 0:
                     queue.append(relative)
 
