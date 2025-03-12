@@ -12,7 +12,7 @@ This project was tested on:
 - OpenTofu 1.9.0.
 - Terraform 1.6.0.
 
-Refer to our [brief explanation of why we prefer OpenTofu](./docs/opentofu-vs-terraform.md).
+Both are great options, but [we prefer OpenTofu](./docs/opentofu-vs-terraform.md).
 
 ## Architecture
 
