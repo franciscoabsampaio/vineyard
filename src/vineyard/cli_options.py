@@ -1,20 +1,7 @@
 import click
 from typing import Literal
+from vineyard.cli_arguments import argument_plan
 from vineyard.io import echo
-
-
-def option_plan(function: callable):
-    def callback(ctx, param, value):
-        ctx.ensure_object(dict)
-        ctx.obj['plan'] = value
-        return value
-    
-    return click.option(
-      '--plan', '-p', '-plan',
-      help='Infrastructure plan name.',
-      required=True,
-      callback=callback
-  )(function)
 
 
 def option_env(function: callable):
@@ -42,7 +29,7 @@ def option_path_to_plans(function: callable):
         return value
 
     return click.option(
-        '--path-to-plans', '-pp', '-path-to-plans',
+        '--path-to-plans', '-p', '-path-to-plans',
         help='Path to the directory with all infrastructure plans.',
         default='./tf-plans',
         show_default=True,
@@ -85,6 +72,6 @@ def options_tf(function: callable):
     function = option_recursive(function)
     function = option_runner(function)
     # 'plan' must be processed before 'path_to_plans'!
-    function = option_plan(option_path_to_plans(function))
+    function = argument_plan(option_path_to_plans(function))
 
     return function

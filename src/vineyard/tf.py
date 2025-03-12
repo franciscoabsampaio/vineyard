@@ -36,7 +36,7 @@ def tf(runner: str, cmd: str, path_to_plans: str, plan: str) -> int:
         return 1
 
 
-def init(plan, path_to_plans, plans, runner, recursive, upgrade):
+def init(plan, path_to_plans, plans, runner, recursive, upgrade) -> set[str]:
     set_of_plans = set(plans.nodes) if recursive else {plan}
 
     plans_initialized = read_temp_file("init_status") if not upgrade else set()
@@ -50,8 +50,11 @@ def init(plan, path_to_plans, plans, runner, recursive, upgrade):
 
     update_temp_file("init_status", plans_initialized)
 
+    return plans_initialized
 
-# tf plan
+
+def validate(plan, path_to_plans, plans, runner, recursive, json) -> set[str]:
+    set_of_plans_initialized = init(plan, path_to_plans, plans, runner, recursive, upgrade=True)
 
 
 # tf apply
