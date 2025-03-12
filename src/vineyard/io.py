@@ -37,7 +37,7 @@ def echo(message: str, log_level: str = "INFO") -> None:
     """
     Custom logging function with color-coded output.
     """
-    if LOG_LEVELS.index(log_level) < LOG_LEVELS.index(os.getenv("VINE_LOG_LEVEL", 1)):
+    if LOG_LEVELS.index(log_level) < LOG_LEVELS.index(os.getenv("VINE_LOG_LEVEL", "INFO")):
         return  # Suppress messages below the global log level
 
     message = f"{datetime.now().time().isoformat(timespec='seconds')} vineyard: [{log_level}] {message}"

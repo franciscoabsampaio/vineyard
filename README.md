@@ -3,7 +3,7 @@
 </div>
 
 **vineyard** is an [infrastructure-as-code](https://www.hashicorp.com/en/resources/what-is-infrastructure-as-code) framework that leverages opinionated, plug-and-play Terraform/OpenTofu
-plans to programmatically generate data and analytics infrastructures in Azure.
+plans to programmatically generate data and analytics infrastructure in Azure.
 
 **vineyard**'s value proposition comes in two parts:
 
@@ -32,7 +32,7 @@ The library houses the plans for setting up the vineyard. Whether you take from 
 
 ### Creating new plans
 
-Creating a new plan is just as normal as any other IaC workflow. Just add a `_deps.conf` file to the plan root, and fill in with the required dependencies.
+Creating a new plan is just as normal as any other IaC workflow. Just add a [`_deps.conf` file to the plan root, and fill in with the required dependencies](./docs/dependency_configuration.md).
 
 By default, **vine** expects the library to be located in a `library` directory, but this can be configured.
 

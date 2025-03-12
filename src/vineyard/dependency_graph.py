@@ -16,8 +16,8 @@ class DependencyGraph(nx.DiGraph):
                 self.add_node(plan_name)
 
                 with open(f"{root}/_deps.conf", "r") as f:
-                    dependencies = [line.strip() for line in f if (
-                        line.strip()
+                    dependencies = [line.strip().strip("/") for line in f if (
+                        line.strip().strip("/")
                         and not line.startswith("#")  # Ignore comments
                     )]
                     for dependency in dependencies:

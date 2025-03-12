@@ -15,17 +15,27 @@ def graph(tmp_path):
     # Create dependency files
     (tmp_path / "A" / "_deps.conf").write_text("")        # A has no dependencies
     (tmp_path / "B" / "_deps.conf").write_text("#commentlikeandsubscribe\nA\n")     # B depends on A
-    (tmp_path / "C" / "_deps.conf").write_text("A\nB\n")  # C depends on A and B
+    (tmp_path / "C" / "_deps.conf").write_text("/A\nB/\n//")  # C depends on A and B
     (tmp_path / "C/D" / "_deps.conf").write_text("A\nC\n")  # D depends on A and C (and, indirectly, B)
 
     # Return the DependencyGraph instance
     return DependencyGraph().from_library(str(tmp_path))
 
 
-def test_dependency_graph_ignores_conf_file_comments(graph):
+def test_dependency_graph_ignores_line_comments(graph):
     # Assertions
     assert isinstance(graph, DependencyGraph)
     assert "#commentlikeandsubscribe" not in set(graph.nodes)
+
+
+def test_dependency_graph_ignores_trailing_and_leading_slashes(graph):
+    # Assertions
+    assert isinstance(graph, DependencyGraph)
+    assert "/A" not in set(graph.nodes)
+    assert "B/" not in set(graph.nodes)
+    assert "//" not in set(graph.nodes)
+    assert "A" in set(graph.nodes)
+    assert "B" in set(graph.nodes)
 
 
 def test_dependency_graph_mirrors_the_file_structure(graph, tmp_path):
