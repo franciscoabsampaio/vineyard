@@ -1,3 +1,4 @@
+from collections import deque
 import matplotlib.pyplot as plt
 import networkx as nx
 import os
@@ -53,16 +54,68 @@ class DependencyGraph(nx.DiGraph):
         return visited
 
 
-    def from_dependency_subgraph(self, node: str) -> Self:
+    def subgraph_from_node(self, node: str) -> Self:
         """
-        Function to create a new DependencyGraph object from a subgraph, given a leaf node.
-        
-        args:
-            node: The node where the dependency subgraph *ends*.
+        Function to create a new DependencyGraph object from a subgraph,
+        given a leaf node where the dependency subgraph *ends*.
         """
-
         # Get all dependencies (parents) of the given node
         dependencies = self.find_all_dependencies(node.strip("/"))
 
-        # Return the new dependency graph containing the node and its dependencies
         return self.subgraph(dependencies)
+
+
+    def subtract(self, other: Self) -> Self:
+        """
+        Subtracts nodes and edges from the current graph.
+        """
+        self.remove_nodes_from(other.nodes)
+        self.remove_edges_from(other.edges)
+        
+        return self
+    
+
+    def add(self, other: Self) -> Self:
+        """
+        Adds nodes and edges from another graph.
+        """
+        self.add_nodes_from(other.nodes)
+        self.add_edges_from(other.edges)
+        
+        return self
+    
+
+    def sorted_list(self, reverse: bool = False) -> list[str]:
+        """
+        Returns a list of nodes, sorted using Kahn's algorithm.
+        By default, the list is sorted from the root to the leaves, by level.
+        If reverse=True, the list is sorted from the leaves to the root.
+        """
+        # Compute in/out-degree (number of incoming/outgoing edges for each node)
+        # to start processing root nodes (no incoming) or leaf nodes (no outgoing)
+        # depending on traversal direction
+        degree = {
+            node: (
+                self.in_degree(node)
+                if not reverse
+                else self.out_degree(node)
+            ) for node in self.nodes
+        }
+
+        # Start with root nodes (in-degree 0) if forward, or leaf nodes (out-degree 0) if reversed
+        queue = deque([node for node in self.nodes if degree[node] == 0])
+
+        sorted_nodes = []
+
+        while queue:
+            node = queue.popleft()
+            sorted_nodes.append(node)
+
+            relatives = self.predecessors(node) if reverse else self.successors(node)
+            for relative in relatives:
+                degree[relative] -= 1
+                if degree[relative] == 0:
+                    queue.append(relative)
+
+        return sorted_nodes
+    

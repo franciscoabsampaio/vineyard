@@ -78,29 +78,42 @@ def test_find_all_dependencies(graph):
     assert dependencies_d == {'A', 'B', 'C', 'C/D'}  # D depends on all nodes, even B (indirectly)
 
 
-def test_from_dependency_subgraph(graph):
+def test_subgraph_from_node(graph):
     """
-    Test the from_dependency_subgraph function.
+    Test the subgraph_from_node function.
     """
 
     # Test for 'A', which should only return node A (no dependencies)
-    new_graph_a = graph.from_dependency_subgraph('A')
+    new_graph_a = graph.subgraph_from_node('A')
     assert sorted(new_graph_a.nodes) == ['A']
     assert list(new_graph_a.edges) == []  # No edges in the subgraph for A
     
     # Test for 'B', which should return a subgraph with nodes A, and B
-    new_graph_b = graph.from_dependency_subgraph('B')
+    new_graph_b = graph.subgraph_from_node('B')
     assert sorted(new_graph_b.nodes) == sorted(['A', 'B'])
     assert ('A', 'B') in new_graph_b.edges  # Edge from A to B should be present
 
     # Test for 'C', which should return a subgraph with nodes A, B, and C
-    new_graph_c = graph.from_dependency_subgraph('C')
+    new_graph_c = graph.subgraph_from_node('C')
     assert sorted(new_graph_c.nodes) == sorted(['A', 'B', 'C'])
     assert ('A', 'B') in new_graph_c.edges  # Edge from A to C should be present
     assert ('A', 'C') in new_graph_c.edges  # Edge from A to C should be present
     assert ('B', 'C') in new_graph_c.edges  # Edge from A to C should be present
 
     # Test for 'D', which should return all nodes
-    new_graph_d = graph.from_dependency_subgraph('C/D')
+    new_graph_d = graph.subgraph_from_node('C/D')
     assert sorted(graph.nodes) == sorted(new_graph_d.nodes)
     assert sorted(graph.edges) == sorted(new_graph_d.edges)
+
+
+def test_sorting(graph):
+    """Test normal topological sorting (root to leaves)."""
+    result = graph.sorted_list()
+    assert all(result.index(u) < result.index(v) for u, v in graph.edges), \
+        f"Result {result} is not a valid topological order."
+
+def test_sorting_reversed(graph):
+    """Test reverse topological sorting (leaves to root)."""
+    result = graph.sorted_list(reverse=True)
+    assert all(result.index(u) > result.index(v) for u, v in graph.edges), \
+        f"Result {result} is not a valid topological order"

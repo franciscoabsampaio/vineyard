@@ -77,6 +77,29 @@ def validate(plan: str, path_to_library: str, runner: str, recursive: bool, upgr
 @options_tf
 def plan(plan: str, path_to_library: str, runner: str, recursive: bool, upgrade: bool):
     """
-    ???
+    Execute a dry run of all infrastructure plans,
+    showing what changes would be made.
     """
     tf.plan(plan, path_to_library, runner, recursive, upgrade)
+
+
+########################
+# apply
+@cli.command()
+@options_tf
+def apply(plan: str, path_to_library: str, runner: str, recursive: bool, upgrade: bool):
+    """
+    Apply the plans, building the infrastructure and applying any latent changes.
+    """
+    tf.apply(plan, path_to_library, runner, recursive, upgrade)
+
+
+########################
+# destroy
+@cli.command()
+@options_tf
+def destroy(plan: str, path_to_library: str, runner: str, recursive: bool, upgrade: bool):
+    """
+    Destroy all infrastructure described in the associated set of plans.
+    """
+    tf.destroy(plan, path_to_library, runner, recursive, upgrade)

@@ -62,64 +62,83 @@ def tf(
 
 
 def tf_loop(
-    set_of_plans_to_run: set[str],
+    graph_of_plans_to_run: DependencyGraph,
+    reverse: bool = False,
     *args,
     **kwargs
-) -> set[str]:
-    return {
-        plan for plan in set_of_plans_to_run
+) -> DependencyGraph:
+    return graph_of_plans_to_run.subgraph({
+        plan for plan in graph_of_plans_to_run.sorted_list(reverse)
         if tf(plan, *args, **kwargs) == 0
-    }
+    })
 
 
-def init(plan, path_to_library, runner, recursive, upgrade) -> set[str]:
-    set_of_plans = set(
+def init(plan, path_to_library, runner, recursive, upgrade) -> DependencyGraph:
+    graph_of_plans = (
         DependencyGraph()
         .from_library(path_to_library)
-        .from_dependency_subgraph(plan).nodes
-    ) if recursive else {plan}
+        .subgraph_from_node(plan).nodes
+    ) if recursive else DependencyGraph().add_node(plan)
 
-    set_of_plans_initialized = read_file("init_status") if not upgrade else set()
-    set_of_plans_to_initialize = set_of_plans - set_of_plans_initialized
+    graph_of_plans_initialized = graph_of_plans.subgraph(
+        read_file("init_status") if not upgrade else set()
+    )
+    graph_of_plans_to_initialize = graph_of_plans.subtract(graph_of_plans_initialized)
 
-    if not set_of_plans_to_initialize:
+    if not graph_of_plans_to_initialize:
         echo("No plans require initialization. Did you mean to run -upgrade?", log_level="INFO")
-        return set_of_plans_initialized
+        return graph_of_plans.subgraph(graph_of_plans_initialized.nodes)
 
-    set_of_plans_initialized.update(tf_loop(
-        set_of_plans_to_initialize,
+    graph_of_plans_initialized.add(tf_loop(
+        graph_of_plans_to_initialize,
         runner, f"init{' -upgrade' if upgrade else ''}", path_to_library,
-    ))
+    ).nodes)
 
-    update_file("init_status", set_of_plans_initialized)
+    update_file("init_status", graph_of_plans_initialized.nodes)
 
-    return set_of_plans_initialized
+    return graph_of_plans_initialized
 
 
-def validate(plan, path_to_library, runner, recursive, upgrade, json) -> set[str]:
-    set_of_plans_initialized = init(plan, path_to_library, runner, recursive, upgrade=upgrade)
+def validate(plan, path_to_library, runner, recursive, upgrade, json) -> DependencyGraph:
+    graph_of_plans_initialized = init(plan, path_to_library, runner, recursive, upgrade=upgrade)
 
-    set_of_plans_validated = tf_loop(
-        set_of_plans_initialized,
+    graph_of_plans_validated = tf_loop(
+        graph_of_plans_initialized,
         runner, f"validate{' -json' if json else ''}", path_to_library,
         save_output=json,
     )
 
-    return set_of_plans_validated
+    return graph_of_plans_validated
 
 
-def plan(plan, path_to_library, runner, recursive, upgrade) -> set[str]:
-    set_of_plans_initialized = init(plan, path_to_library, runner, recursive, upgrade=upgrade)
+def plan(plan, path_to_library, runner, recursive, upgrade) -> DependencyGraph:
+    graph_of_plans_initialized = init(plan, path_to_library, runner, recursive, upgrade=upgrade)
 
-    set_of_plans_planned = tf_loop(
-        set_of_plans_initialized,
+    graph_of_plans_planned = tf_loop(
+        graph_of_plans_initialized,
         runner, "plan", path_to_library,
     )
 
-    return set_of_plans_planned
+    return graph_of_plans_planned
 
 
-# tf apply
+def apply(plan, path_to_library, runner, recursive, upgrade) -> DependencyGraph:
+    graph_of_plans_initialized = init(plan, path_to_library, runner, recursive, upgrade=upgrade)
+
+    graph_of_plans_applied = tf_loop(
+        graph_of_plans_initialized,
+        runner, "apply", path_to_library,
+    )
+
+    return graph_of_plans_applied
 
 
-# tf destroy
+def destroy(plan, path_to_library, runner, recursive, upgrade) -> DependencyGraph:
+    graph_of_plans_initialized = init(plan, path_to_library, runner, recursive, upgrade=upgrade)
+
+    graph_of_plans_destroyed = tf_loop(
+        graph_of_plans_initialized,
+        runner, "destroy", path_to_library, reverse=True,
+    )
+
+    return graph_of_plans_destroyed
