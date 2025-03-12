@@ -1,16 +1,31 @@
 import click
+import os
 import subprocess
-from vineyard.dependency_graph import DependencyGraph
 from vineyard.cli_options import options_tf, option_runner
+from vineyard.io import LOG_LEVELS
 from vineyard import tf
 
 
 @click.group()
-def cli():
+@click.option(
+    '--log_level', '-l',
+    default="INFO",
+    show_default=True,
+    envvar="VINE_LOG_LEVEL",
+    help=f"""
+    Set the global log level for the CLI.
+    Can be overridden by setting the VINE_LOG_LEVEL environment variable.
+    
+    Accepted values: {LOG_LEVELS}
+    """
+)
+def cli(log_level: str):
     """
     Manage infrastructure plans.
     """
-    pass
+    if log_level not in LOG_LEVELS:
+        raise ValueError(f"Invalid log level: {log_level}. Accepted values: {LOG_LEVELS}")
+    os.environ["VINE_LOG_LEVEL"] = os.getenv("VINE_LOG_LEVEL", log_level)
 
 
 ########################
@@ -33,14 +48,11 @@ def fmt(runner: str):
     is_flag=True,
     help="Pass -upgrade flag to 'RUNNER init'."
 )
-@click.pass_context
-def init(ctx, plan: str, path_to_plans: str, runner: str, recursive: bool, upgrade: bool):
+def init(plan: str, path_to_plans: str, runner: str, recursive: bool, upgrade: bool):
     """
     Initialize all infrastructure plans.
     """
-    plans = ctx.obj['plans']
-
-    tf.init(plan, path_to_plans, plans, runner, recursive, upgrade)
+    tf.init(plan, path_to_plans, runner, recursive, upgrade)
 
 
 ########################
@@ -56,17 +68,13 @@ def init(ctx, plan: str, path_to_plans: str, runner: str, recursive: bool, upgra
     Additionally, saves JSON output to a file.
     """
 )
-@click.pass_context
-def validate(ctx, plan: str, path_to_plans: str, runner: str, recursive: bool, json: bool):
+def validate(plan: str, path_to_plans: str, runner: str, recursive: bool, json: bool):
     """
     Validate plans' syntax and correctness.
     By default, runs 'RUNNER init -upgrade' prior to execution.
     Plans that fail to 'init' are not validated.
     """
-
-    plans = ctx.obj['plans']
-
-    tf.validate(plan, path_to_plans, plans, runner, recursive, json)
+    tf.validate(plan, path_to_plans, runner, recursive, json)
 
 
 ########################
@@ -79,12 +87,8 @@ def validate(ctx, plan: str, path_to_plans: str, runner: str, recursive: bool, j
     is_flag=True,
     help="Pass -upgrade flag to 'RUNNER init'."
 )
-@click.pass_context
-def plan(ctx, plan: str, path_to_plans: str, runner: str, recursive: bool, upgrade: bool):
+def plan(plan: str, path_to_plans: str, runner: str, recursive: bool, upgrade: bool):
     """
     ???
     """
-    
-    plans = ctx.obj['plans']
-
-    tf.init(plan, path_to_plans, plans, runner, recursive, upgrade)
+    tf.plan(plan, path_to_plans, runner, recursive, upgrade)

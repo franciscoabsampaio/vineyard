@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import os
 from typing import Self
-from vineyard.io import DIRECTORY_OUTPUT, echo
+from vineyard.io import DIRECTORIES, echo
 
 
 class DependencyGraph(nx.DiGraph):
@@ -26,7 +26,7 @@ class DependencyGraph(nx.DiGraph):
         return self
 
 
-    def save_to_png(self, target_directory: str = DIRECTORY_OUTPUT):
+    def save_to_png(self, target_directory: str = DIRECTORIES["output"]) -> None:
         plt.figure(figsize=(8, 5))
         nx.draw(self, with_labels=True, node_color="lightblue", edge_color="gray", arrowsize=20)
         plt.savefig(os.path.join(target_directory, "graph.png"), dpi=300)
@@ -62,7 +62,7 @@ class DependencyGraph(nx.DiGraph):
         """
 
         # Get all dependencies (parents) of the given node
-        dependencies = self.find_all_dependencies(node)
+        dependencies = self.find_all_dependencies(node.strip("/"))
 
         # Return the new dependency graph containing the node and its dependencies
         return self.subgraph(dependencies)
