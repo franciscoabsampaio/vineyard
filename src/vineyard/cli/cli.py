@@ -75,6 +75,7 @@ def validate(plan: str, path_to_library: str, runner: str, recursive: bool, upgr
 ########################
 # plan
 @cli.command()
+@option_workspace
 @options_tf
 @options_tf_vars
 def plan(plan: str, path_to_library: str, runner: str, recursive: bool, upgrade: bool):
@@ -88,6 +89,7 @@ def plan(plan: str, path_to_library: str, runner: str, recursive: bool, upgrade:
 ########################
 # apply
 @cli.command()
+@option_workspace
 @options_tf
 @option_auto_approve
 @options_tf_vars
@@ -101,6 +103,7 @@ def apply(plan: str, path_to_library: str, runner: str, recursive: bool, upgrade
 ########################
 # destroy
 @cli.command()
+@option_workspace
 @options_tf
 @option_auto_approve
 def destroy(plan: str, path_to_library: str, runner: str, recursive: bool, upgrade: bool, auto_approve: bool):
