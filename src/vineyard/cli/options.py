@@ -14,10 +14,16 @@ def option_auto_approve(function: callable):
 
 
 def option_path_to_library(function: callable):
+    def callback(ctx, param, value):
+        echo(f"--path-to-library: {value}", log_level="DEBUG")
+        return value
+    
     return click.option(
         '--path-to-library', '-p', '-path-to-library',
         help='Path to the directory with all infrastructure plans.',
         default='./library',
+        envvar='VINEYARD_PATH_TO_LIBRARY',
+        callback=callback,
         show_default=True,
     )(function)
 

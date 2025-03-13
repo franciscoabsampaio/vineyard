@@ -58,25 +58,6 @@ class DependencyGraph(nx.DiGraph):
         return wsubgraph
     
 
-    def from_node_wsubgraph(self, node: str) -> Self:
-        """
-        Function to create a new DependencyGraph object from a subgraph,
-        given a leaf node where the dependency subgraph *ends*.
-        """
-        # Get all dependencies (parents) of the given node
-        dependencies = self.find_all_dependencies(node)
-
-        return self.wsubgraph(dependencies)
-
-
-    def save_to_png(self, target_directory: str = DIRECTORIES["output"]) -> None:
-        plt.figure(figsize=(8, 5))
-        nx.draw(self, with_labels=True, node_color="lightblue", edge_color="gray", arrowsize=20)
-        plt.savefig(os.path.join(target_directory, "graph.png"), dpi=300)
-
-        echo(f"graph.png was saved to {target_directory}.", log_level="INFO")
-
-
     def find_all_dependencies(self, node: str, visited=None) -> set:
         """
         Utility function to find all dependencies (parent nodes) recursively
@@ -94,6 +75,30 @@ class DependencyGraph(nx.DiGraph):
                 visited = self.find_all_dependencies(parent, visited)
 
         return visited
+    
+
+    def from_nodes_wsubgraph(self, nodes: tuple[str]) -> Self:
+        """
+        Function to create a new DependencyGraph object from a subgraph,
+        given any number of nodes - which the wsubgraph must include.
+        """
+        # Get all dependencies (parents) for each node
+        from itertools import chain
+        dependencies = set(
+            chain.from_iterable(
+                self.find_all_dependencies(node) for node in nodes
+            )
+        )
+
+        return self.wsubgraph(dependencies)
+
+
+    def save_to_png(self, target_directory: str = DIRECTORIES["output"]) -> None:
+        plt.figure(figsize=(8, 5))
+        nx.draw(self, with_labels=True, node_color="lightblue", edge_color="gray", arrowsize=20)
+        plt.savefig(os.path.join(target_directory, "graph.png"), dpi=300)
+
+        echo(f"graph.png was saved to {target_directory}.", log_level="INFO")
 
 
     def subtract(self, other: Self) -> Self:

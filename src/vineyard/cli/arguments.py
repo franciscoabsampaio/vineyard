@@ -1,9 +1,11 @@
 import click
+from vineyard.io import echo
 
 
 def argument_plan(function: callable):
     help_text = """
     PLAN: apply command to the PLAN dependency tree, including PLAN.
+    Can take multiple plans as arguments.
     """
 
     if function.__doc__:
@@ -12,6 +14,12 @@ def argument_plan(function: callable):
         function.__doc__ = help_text
     
     def callback(ctx, param, value):
-        return value.strip("/")
+        if value is None:
+            echo("At least ONE plan is required.", log_level="ERROR")
+        return [plan.strip("/") for plan in value]
     
-    return click.argument('plan', callback=callback)(function)
+    return click.argument(
+        'plan',
+        callback=callback,
+        nargs=-1  # Variadic argument
+    )(function)

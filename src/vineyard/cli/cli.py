@@ -47,7 +47,7 @@ def init(plan: str, path_to_library: str, runner: str, recursive: bool, upgrade:
     """
     Initialize all infrastructure plans.
     """
-    tf.init(plan, path_to_library, runner, recursive, upgrade)
+    tf.init(plan, path_to_library, recursive, runner, upgrade)
 
 
 ########################
@@ -69,7 +69,7 @@ def validate(plan: str, path_to_library: str, runner: str, recursive: bool, upgr
     By default, runs 'RUNNER init -upgrade' prior to execution.
     Plans that fail to 'init' are not validated.
     """
-    tf.validate(plan, path_to_library, runner, recursive, upgrade, json)
+    tf.validate(plan, path_to_library, recursive, runner, upgrade, json)
 
 
 ########################
@@ -82,7 +82,7 @@ def plan(plan: str, path_to_library: str, runner: str, recursive: bool, upgrade:
     Execute a dry run of all infrastructure plans,
     showing what changes would be made.
     """
-    tf.plan(plan, path_to_library, runner, recursive, upgrade)
+    tf.plan(plan, path_to_library, recursive, runner, upgrade)
 
 
 ########################
@@ -95,7 +95,7 @@ def apply(plan: str, path_to_library: str, runner: str, recursive: bool, upgrade
     """
     Apply the plans, building the infrastructure and applying any latent changes.
     """
-    tf.apply(plan, path_to_library, runner, recursive, upgrade, auto_approve)
+    tf.apply(plan, path_to_library, recursive, runner, upgrade, auto_approve)
 
 
 ########################
@@ -107,4 +107,4 @@ def destroy(plan: str, path_to_library: str, runner: str, recursive: bool, upgra
     """
     Destroy all infrastructure described in the associated set of plans.
     """
-    tf.destroy(plan, path_to_library, runner, recursive, upgrade, auto_approve)
+    tf.destroy(plan, path_to_library, recursive, runner, upgrade, auto_approve)

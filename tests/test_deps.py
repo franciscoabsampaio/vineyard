@@ -102,30 +102,31 @@ def test_wsubgraph(graph):
     assert "X" not in graph.nodes, "Modifying the subgraph should not affect the original graph"
 
 
-def test_from_node_wsubgraph(graph):
+def test_from_nodes_wsubgraph(graph):
     """
-    Test the from_node_wsubgraph function.
+    Test the from_nodes_wsubgraph function.
+    Works with
     """
 
     # Test for 'A', which should only return node A (no dependencies)
-    new_graph_a = graph.from_node_wsubgraph('A')
+    new_graph_a = graph.from_nodes_wsubgraph(['A'])
     assert sorted(new_graph_a.nodes) == ['A']
     assert list(new_graph_a.edges) == []  # No edges in the subgraph for A
     
     # Test for 'B', which should return a subgraph with nodes A, and B
-    new_graph_b = graph.from_node_wsubgraph('B')
+    new_graph_b = graph.from_nodes_wsubgraph({'B'})
     assert sorted(new_graph_b.nodes) == sorted(['A', 'B'])
     assert ('A', 'B') in new_graph_b.edges  # Edge from A to B should be present
 
-    # Test for 'C', which should return a subgraph with nodes A, B, and C
-    new_graph_c = graph.from_node_wsubgraph('C')
+    # Test for ('C', 'A'), which should return a subgraph with nodes A, B, and C
+    new_graph_c = graph.from_nodes_wsubgraph(('C', 'A'))
     assert sorted(new_graph_c.nodes) == sorted(['A', 'B', 'C'])
     assert ('A', 'B') in new_graph_c.edges  # Edge from A to C should be present
     assert ('A', 'C') in new_graph_c.edges  # Edge from A to C should be present
     assert ('B', 'C') in new_graph_c.edges  # Edge from A to C should be present
 
     # Test for 'D', which should return all nodes
-    new_graph_d = graph.from_node_wsubgraph('C/D')
+    new_graph_d = graph.from_nodes_wsubgraph(['C/D'])
     assert sorted(graph.nodes) == sorted(new_graph_d.nodes)
     assert sorted(graph.edges) == sorted(new_graph_d.edges)
 

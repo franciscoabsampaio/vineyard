@@ -70,13 +70,24 @@ def tf_loop(
     })
 
 
-def init(plan, path_to_library, runner, recursive, upgrade) -> DependencyGraph:
-    graph_of_plans = (
-        DependencyGraph()
-        .from_library(path_to_library)
-        .from_node_wsubgraph(plan)
-    ) if recursive else DependencyGraph().from_node(plan)
+def with_dependency_graph(function):
+    """
+    Decorator that creates the dependency graph of all relevant plans.
+    """
+    def wrapper(plan: tuple[str], path_to_library, recursive, *args, **kwargs):
+        graph_of_plans = (
+            DependencyGraph()
+            .from_library(path_to_library)
+            .from_nodes_wsubgraph(plan)
+        ) if recursive else DependencyGraph().from_node(plan)
 
+        return function(graph_of_plans, path_to_library, *args, **kwargs)
+    
+    return wrapper
+
+
+@with_dependency_graph
+def init(graph_of_plans, path_to_library, runner, upgrade) -> DependencyGraph:
     graph_of_plans_initialized = graph_of_plans.wsubgraph(
         read_file("init_status") if not upgrade else set()
     )
@@ -100,8 +111,9 @@ def with_tf_init(function):
     """
     Decorator that runs 'init' before the function.
     """
-    def wrapper(plan, path_to_library, runner, recursive, upgrade, *args, **kwargs):
-        graph_of_plans_initialized = init(plan, path_to_library, runner, recursive, upgrade=upgrade)
+    @with_dependency_graph
+    def wrapper(graph_of_plans, path_to_library, runner, upgrade, *args, **kwargs):
+        graph_of_plans_initialized = init(graph_of_plans, path_to_library, runner, upgrade=upgrade)
         return function(graph_of_plans_initialized, path_to_library, runner, *args, **kwargs)
 
     return wrapper
