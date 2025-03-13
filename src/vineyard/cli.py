@@ -1,7 +1,7 @@
 import click
 import os
 import subprocess
-from vineyard.cli_options import options_tf, option_runner
+from vineyard.cli_options import options_tf, option_runner, option_auto_approve
 from vineyard.io import LOG_LEVELS
 from vineyard import tf
 
@@ -87,19 +87,21 @@ def plan(plan: str, path_to_library: str, runner: str, recursive: bool, upgrade:
 # apply
 @cli.command()
 @options_tf
-def apply(plan: str, path_to_library: str, runner: str, recursive: bool, upgrade: bool):
+@option_auto_approve
+def apply(plan: str, path_to_library: str, runner: str, recursive: bool, upgrade: bool, auto_approve: bool):
     """
     Apply the plans, building the infrastructure and applying any latent changes.
     """
-    tf.apply(plan, path_to_library, runner, recursive, upgrade)
+    tf.apply(plan, path_to_library, runner, recursive, upgrade, auto_approve)
 
 
 ########################
 # destroy
 @cli.command()
 @options_tf
-def destroy(plan: str, path_to_library: str, runner: str, recursive: bool, upgrade: bool):
+@option_auto_approve
+def destroy(plan: str, path_to_library: str, runner: str, recursive: bool, upgrade: bool, auto_approve: bool):
     """
     Destroy all infrastructure described in the associated set of plans.
     """
-    tf.destroy(plan, path_to_library, runner, recursive, upgrade)
+    tf.destroy(plan, path_to_library, runner, recursive, upgrade, auto_approve)

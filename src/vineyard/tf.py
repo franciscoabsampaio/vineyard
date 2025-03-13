@@ -102,7 +102,7 @@ def with_tf_init(function):
     """
     def wrapper(plan, path_to_library, runner, recursive, upgrade, *args, **kwargs):
         graph_of_plans_initialized = init(plan, path_to_library, runner, recursive, upgrade=upgrade)
-        return function(graph_of_plans_initialized, runner, *args, **kwargs)
+        return function(graph_of_plans_initialized, path_to_library, runner, *args, **kwargs)
 
     return wrapper
 
