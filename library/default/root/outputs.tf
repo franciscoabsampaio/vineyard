@@ -1,4 +1,4 @@
-locals {
+/*locals {
   output_resources = { for env, resource in var.environments :
     env => {
       resource_group_name     = azurerm_resource_group.env[env].name
@@ -25,3 +25,4 @@ locals {
 output "resources" {
   value = local.output_resources
 }
+*/

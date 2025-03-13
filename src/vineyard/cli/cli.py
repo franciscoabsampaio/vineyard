@@ -1,7 +1,8 @@
 import click
 import os
 import subprocess
-from vineyard.cli_options import options_tf, option_runner, option_auto_approve
+from vineyard.cli.options import options_tf, option_runner, option_auto_approve
+from vineyard.cli.options_tf_vars import options_tf_vars
 from vineyard.io import LOG_LEVELS
 from vineyard import tf
 
@@ -75,6 +76,7 @@ def validate(plan: str, path_to_library: str, runner: str, recursive: bool, upgr
 # plan
 @cli.command()
 @options_tf
+@options_tf_vars
 def plan(plan: str, path_to_library: str, runner: str, recursive: bool, upgrade: bool):
     """
     Execute a dry run of all infrastructure plans,
@@ -88,6 +90,7 @@ def plan(plan: str, path_to_library: str, runner: str, recursive: bool, upgrade:
 @cli.command()
 @options_tf
 @option_auto_approve
+@options_tf_vars
 def apply(plan: str, path_to_library: str, runner: str, recursive: bool, upgrade: bool, auto_approve: bool):
     """
     Apply the plans, building the infrastructure and applying any latent changes.

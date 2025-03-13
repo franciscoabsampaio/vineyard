@@ -1,7 +1,7 @@
 # Resource Name Convention
 
 By default, resource names must be 24 characters or shorter, follow the
-``CamelCase`` convention, as well as the following guidelines:
+``snake_case`` convention, as well as the following guidelines:
 
 ```js
 ${PREFIX}-${ENV}-${RESOURCE_TYPE}-${OPTIONAL:RESOURCE_NAME}

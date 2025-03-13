@@ -1,6 +1,6 @@
 import click
 from typing import Literal
-from vineyard.cli_arguments import argument_plan
+from vineyard.cli.arguments import argument_plan
 from vineyard.io import echo
 
 
@@ -10,14 +10,6 @@ def option_auto_approve(function: callable):
         default=False,
         is_flag=True,
         help="Pass -auto-approve flag to 'RUNNER apply/destroy'."
-    )(function)
-
-
-def option_env(function: callable):
-    return click.option(
-        '--env', '-e', '-env',
-        help='Environment name.',
-        required=True
     )(function)
 
 

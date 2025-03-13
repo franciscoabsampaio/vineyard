@@ -1,18 +1,4 @@
 locals {
-  /*
-  From this:
-  {
-    adls-dev = {
-      name1 = {},
-      name2 = {}
-    }
-  }
-  
-  To this:
-  {
-    dev-name1 = {}
-  }
-  */
   map_of_storage_accounts = { for k, v in local.map_of_resources :
     k => v
     if split("-", k)[0] == "adls"

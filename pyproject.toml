@@ -21,4 +21,4 @@ test = [
 ]
 
 [project.scripts]
-vine = "vineyard.cli:cli"
+vine = "vineyard.cli.cli:cli"
