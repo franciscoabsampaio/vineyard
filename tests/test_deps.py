@@ -78,30 +78,54 @@ def test_find_all_dependencies(graph):
     assert dependencies_d == {'A', 'B', 'C', 'C/D'}  # D depends on all nodes, even B (indirectly)
 
 
-def test_subgraph_from_node(graph):
+def test_wsubgraph(graph):
+    """Test that wsubgraph creates a correct writable subgraph."""
+    subset_of_nodes = {"A", "B", "C"}  
+
+    # Generate the writable subgraph
+    subgraph = graph.wsubgraph(subset_of_nodes)
+
+    # Check that only the selected nodes are present
+    assert set(subgraph.nodes) == subset_of_nodes, \
+        f"Expected nodes {subset_of_nodes}, but got {set(subgraph.nodes)}"
+
+    # Check that edges are correctly retained (only within selected nodes)
+    expected_edges = [(u, v) for u, v in graph.edges if u in subset_of_nodes and v in subset_of_nodes]
+    assert set(subgraph.edges) == set(expected_edges), \
+        f"Expected edges {expected_edges}, but got {set(subgraph.edges)}"
+
+    # Ensure that the returned subgraph is a completely new instance, not a view
+    assert subgraph is not graph, "wsubgraph() should return a new instance, not a view"
+
+    # Ensure modifications to the subgraph do not affect the original graph
+    subgraph.add_node("X")
+    assert "X" not in graph.nodes, "Modifying the subgraph should not affect the original graph"
+
+
+def test_from_node_wsubgraph(graph):
     """
-    Test the subgraph_from_node function.
+    Test the from_node_wsubgraph function.
     """
 
     # Test for 'A', which should only return node A (no dependencies)
-    new_graph_a = graph.subgraph_from_node('A')
+    new_graph_a = graph.from_node_wsubgraph('A')
     assert sorted(new_graph_a.nodes) == ['A']
     assert list(new_graph_a.edges) == []  # No edges in the subgraph for A
     
     # Test for 'B', which should return a subgraph with nodes A, and B
-    new_graph_b = graph.subgraph_from_node('B')
+    new_graph_b = graph.from_node_wsubgraph('B')
     assert sorted(new_graph_b.nodes) == sorted(['A', 'B'])
     assert ('A', 'B') in new_graph_b.edges  # Edge from A to B should be present
 
     # Test for 'C', which should return a subgraph with nodes A, B, and C
-    new_graph_c = graph.subgraph_from_node('C')
+    new_graph_c = graph.from_node_wsubgraph('C')
     assert sorted(new_graph_c.nodes) == sorted(['A', 'B', 'C'])
     assert ('A', 'B') in new_graph_c.edges  # Edge from A to C should be present
     assert ('A', 'C') in new_graph_c.edges  # Edge from A to C should be present
     assert ('B', 'C') in new_graph_c.edges  # Edge from A to C should be present
 
     # Test for 'D', which should return all nodes
-    new_graph_d = graph.subgraph_from_node('C/D')
+    new_graph_d = graph.from_node_wsubgraph('C/D')
     assert sorted(graph.nodes) == sorted(new_graph_d.nodes)
     assert sorted(graph.edges) == sorted(new_graph_d.edges)
 
@@ -111,6 +135,7 @@ def test_sorting(graph):
     result = graph.sorted_list()
     assert all(result.index(u) < result.index(v) for u, v in graph.edges), \
         f"Result {result} is not a valid topological order."
+
 
 def test_sorting_reversed(graph):
     """Test reverse topological sorting (leaves to root)."""

@@ -11,4 +11,7 @@ def argument_plan(function: callable):
     else:
         function.__doc__ = help_text
     
-    return click.argument('plan')(function)
+    def callback(ctx, param, value):
+        return value.strip("/")
+    
+    return click.argument('plan', callback=callback)(function)

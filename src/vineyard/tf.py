@@ -33,9 +33,7 @@ def tf(
     save_output: bool = False,
 ) -> int:
     cmd = f"{runner} {cmd}"
-
     echo(f"tf('{plan}', '{cmd}', '{path_to_library}', {save_output})", log_level="DEBUG")
-
     echo(f"Running command '{cmd}' for plan '{plan}'.", log_level="INFO")
     
     try:
@@ -52,22 +50,21 @@ def tf(
                 [output.stdout.decode()],
                 dir='output'
             )
-
         echo(f"Command '{cmd}' for plan '{plan}' was successful!", log_level="SUCCESS")
         return 0
+    
     except subprocess.CalledProcessError:
-
         echo(f"Command '{cmd}' failed for plan {plan}!", log_level="ERROR")
         return 1
 
 
 def tf_loop(
     graph_of_plans_to_run: DependencyGraph,
-    reverse: bool = False,
     *args,
+    reverse: bool = False,
     **kwargs
 ) -> DependencyGraph:
-    return graph_of_plans_to_run.subgraph({
+    return graph_of_plans_to_run.wsubgraph({
         plan for plan in graph_of_plans_to_run.sorted_list(reverse)
         if tf(plan, *args, **kwargs) == 0
     })
@@ -77,68 +74,67 @@ def init(plan, path_to_library, runner, recursive, upgrade) -> DependencyGraph:
     graph_of_plans = (
         DependencyGraph()
         .from_library(path_to_library)
-        .subgraph_from_node(plan).nodes
-    ) if recursive else DependencyGraph().add_node(plan)
+        .from_node_wsubgraph(plan)
+    ) if recursive else DependencyGraph().from_node(plan)
 
-    graph_of_plans_initialized = graph_of_plans.subgraph(
+    graph_of_plans_initialized = graph_of_plans.wsubgraph(
         read_file("init_status") if not upgrade else set()
     )
     graph_of_plans_to_initialize = graph_of_plans.subtract(graph_of_plans_initialized)
 
     if not graph_of_plans_to_initialize:
         echo("No plans require initialization. Did you mean to run -upgrade?", log_level="INFO")
-        return graph_of_plans.subgraph(graph_of_plans_initialized.nodes)
+        return graph_of_plans.wsubgraph(graph_of_plans_initialized.nodes)
 
     graph_of_plans_initialized.add(tf_loop(
         graph_of_plans_to_initialize,
         runner, f"init{' -upgrade' if upgrade else ''}", path_to_library,
-    ).nodes)
+    ))
 
     update_file("init_status", graph_of_plans_initialized.nodes)
 
     return graph_of_plans_initialized
 
 
-def validate(plan, path_to_library, runner, recursive, upgrade, json) -> DependencyGraph:
-    graph_of_plans_initialized = init(plan, path_to_library, runner, recursive, upgrade=upgrade)
+def with_tf_init(function):
+    """
+    Decorator that runs 'init' before the function.
+    """
+    def wrapper(plan, path_to_library, runner, recursive, upgrade, *args, **kwargs):
+        graph_of_plans_initialized = init(plan, path_to_library, runner, recursive, upgrade=upgrade)
+        return function(graph_of_plans_initialized, runner, *args, **kwargs)
 
-    graph_of_plans_validated = tf_loop(
+    return wrapper
+
+
+@with_tf_init
+def validate(graph_of_plans_initialized, path_to_library, runner, json) -> DependencyGraph:
+    return tf_loop(
         graph_of_plans_initialized,
         runner, f"validate{' -json' if json else ''}", path_to_library,
         save_output=json,
     )
 
-    return graph_of_plans_validated
 
-
-def plan(plan, path_to_library, runner, recursive, upgrade) -> DependencyGraph:
-    graph_of_plans_initialized = init(plan, path_to_library, runner, recursive, upgrade=upgrade)
-
-    graph_of_plans_planned = tf_loop(
+@with_tf_init
+def plan(graph_of_plans_initialized, path_to_library, runner) -> DependencyGraph:
+    return tf_loop(
         graph_of_plans_initialized,
         runner, "plan", path_to_library,
     )
 
-    return graph_of_plans_planned
 
-
-def apply(plan, path_to_library, runner, recursive, upgrade) -> DependencyGraph:
-    graph_of_plans_initialized = init(plan, path_to_library, runner, recursive, upgrade=upgrade)
-
-    graph_of_plans_applied = tf_loop(
+@with_tf_init
+def apply(graph_of_plans_initialized, path_to_library, runner, auto_approve) -> DependencyGraph:
+    return tf_loop(
         graph_of_plans_initialized,
-        runner, "apply", path_to_library,
+        runner, f"apply{' -auto-approve' if auto_approve else ''}", path_to_library,
     )
 
-    return graph_of_plans_applied
 
-
-def destroy(plan, path_to_library, runner, recursive, upgrade) -> DependencyGraph:
-    graph_of_plans_initialized = init(plan, path_to_library, runner, recursive, upgrade=upgrade)
-
-    graph_of_plans_destroyed = tf_loop(
+@with_tf_init
+def destroy(graph_of_plans_initialized, path_to_library, runner, auto_approve) -> DependencyGraph:
+    return tf_loop(
         graph_of_plans_initialized,
-        runner, "destroy", path_to_library, reverse=True,
+        runner, f"destroy{' -auto-approve' if auto_approve else ''}", path_to_library, reverse=True,
     )
-
-    return graph_of_plans_destroyed

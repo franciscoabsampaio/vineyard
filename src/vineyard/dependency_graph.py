@@ -25,6 +25,48 @@ class DependencyGraph(nx.DiGraph):
                         self.add_edge(dependency, plan_name)
         
         return self
+    
+
+    def from_node(self, node: str) -> Self:
+        """
+        Function to create a new DependencyGraph object from a single node.
+        """
+        self.add_node(node)
+        return self
+
+
+    def from_nodes(self, nodes: set[str]) -> Self:
+        """
+        Function to create a new DependencyGraph object from a single node.
+        """
+        self.add_nodes_from(nodes)
+        return self
+    
+    
+    def wsubgraph(self, nodes: set[str]) -> Self:
+        """
+        'w' stands for writable.
+        Whereas subgraph() creates a Graph view,
+        wsubgraph() creates a completely new DependencyGraph object.
+        """
+        wsubgraph = DependencyGraph().from_nodes(nodes)
+
+        for u, v in self.edges:
+            if u in nodes and v in nodes:
+                wsubgraph.add_edge(u, v)
+
+        return wsubgraph
+    
+
+    def from_node_wsubgraph(self, node: str) -> Self:
+        """
+        Function to create a new DependencyGraph object from a subgraph,
+        given a leaf node where the dependency subgraph *ends*.
+        """
+        # Get all dependencies (parents) of the given node
+        dependencies = self.find_all_dependencies(node)
+
+        return self.wsubgraph(dependencies)
 
 
     def save_to_png(self, target_directory: str = DIRECTORIES["output"]) -> None:
@@ -52,17 +94,6 @@ class DependencyGraph(nx.DiGraph):
                 visited = self.find_all_dependencies(parent, visited)
 
         return visited
-
-
-    def subgraph_from_node(self, node: str) -> Self:
-        """
-        Function to create a new DependencyGraph object from a subgraph,
-        given a leaf node where the dependency subgraph *ends*.
-        """
-        # Get all dependencies (parents) of the given node
-        dependencies = self.find_all_dependencies(node.strip("/"))
-
-        return self.subgraph(dependencies)
 
 
     def subtract(self, other: Self) -> Self:
@@ -122,4 +153,3 @@ class DependencyGraph(nx.DiGraph):
                     queue.append(relative)
 
         return sorted_nodes
-    
