@@ -11,7 +11,7 @@ plans** to programmatically generate **data and analytics infrastructure** in Az
 
 ❌ For highly specialized workloads or infrastructure needs.
 
-❌ For teams with *many* platform/infrastructure/devops specialists!
+❌ For teams with *many* platform/infrastructure/devops specialists! Don't want to make it *too* *easy* for them.
 
 ## Instead, `vineyard` Is
 
@@ -23,12 +23,12 @@ plans** to programmatically generate **data and analytics infrastructure** in Az
 
 **`vineyard` comes in two parts:**
 
-- A [library](./docs/library.md) 📚 of plans for managing Azure infrastructure for data and analytics, that is:
+- A [**library**](./docs/library.md) 📚 of plans for managing Azure infrastructure for data and analytics, that is:
 
   - **Opinionated:** reasonable choices are made for each resource, allowing for a *sane* amount of configuration.
   - **Plug-and-play:** each plan is designed to provide unique, but complementary, components to the infrastructure.
 
-- The **vine** 🍃 CLI, responsible for parsing through each plan's dependencies, builds the project's plan dependency graph, and batch execution of Terraform/OpenTofu commands on the selected plans.
+- The [**vine**](./docs/vine.md) 🍃 CLI, responsible for parsing through each plan's dependencies, builds the project's plan dependency graph, and batch execution of Terraform/OpenTofu commands on the selected plans.
 
 Simply choose which components to include from the library - **vine** determines the required dependencies, tells you which inputs to provide, and executes everything in sequence - allowing you (or your CI) to sit back and pour some of your **`vineyard`**'s best grape juice. 🍷
 
