@@ -25,6 +25,32 @@ def load_runners() -> list[str]:
     return runners
 
 
+def list_workspaces(runner: str) -> list[str]:
+    output = subprocess.run(
+        args=[runner, "workspace", "list"],
+        check=True,
+        capture_output=True,
+    ).stdout.decode().replace("*", "")
+
+    return [line.strip() for line in output.split("\n") if line]
+
+
+def select_workspace(workspace: str, runner: str) -> int:
+    list_of_existing_workspaces = list_workspaces(runner)
+    cmd = "new" if workspace not in list_of_existing_workspaces else "select"
+    try:
+        subprocess.run(
+            args=[runner, "workspace", cmd, workspace],
+            check=True,
+        )
+        echo(f"Selected workspace '{workspace}'.", log_level="INFO")
+        return 0
+    
+    except subprocess.CalledProcessError:
+        echo(f"Failed to select workspace '{workspace}'.", log_level="ERROR")
+        return 1
+
+
 def tf(
     plan: str,
     runner: str,

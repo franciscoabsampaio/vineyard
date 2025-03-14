@@ -1,5 +1,7 @@
 import click
 import os
+from vineyard.io import echo
+from vineyard.tf import select_workspace
 
 
 TF_VARS = {
@@ -27,7 +29,10 @@ for name, description in TF_VARS.items():
 
 def option_workspace(function: callable):
     def callback(ctx, param, value):
-        manage_workspace()
+        if len(value) > 7:
+            raise ValueError("Workspace name must be at most 7 characters long.")
+        ctx.ensure_object(dict)
+        select_workspace(value, ctx.obj['runner'])
         return value
 
     return click.option(
@@ -42,7 +47,7 @@ def option_workspace(function: callable):
 
 
 def options_tf_vars(function: callable):
-    for option in OPTIONS_TF_VARS:
+    for tf_var, option in OPTIONS_TF_VARS.items():
         function = option(function)
 
     function = option_workspace(function)

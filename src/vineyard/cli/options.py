@@ -34,16 +34,19 @@ def option_runner(function: callable):
     """
     from vineyard.tf import load_runners
 
-    def callback(ctx, param, value: Literal["tofu", "terraform"]):
+    def callback(ctx, param, value: Literal["terraform", "tofu"]):
         runners_available = load_runners()
         if value not in runners_available:
             echo(f"Runner '{value}' is not installed.", log_level="ERROR")
+        
+        ctx.ensure_object(dict)
+        ctx.obj['runner'] = value
         return value
 
     return click.option(
         '--runner', '-r', '-runner',
         help='Select the preferred runner for managing infrastructure.',
-        default='tofu',
+        default='terraform',
         show_default=True,
         callback=callback
     )(function)
