@@ -1,9 +1,5 @@
-variable "env" {
-  type = string
+variable "global" {
+  type = object({
+    region = string
+  })
 }
-
-variable "region" {
-  type = string
-}
-
-variable "global" {}

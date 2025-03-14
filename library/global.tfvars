@@ -1,3 +1,3 @@
 global = {
-  resource_prefix = "proj"
+  region = "North Europe"
 }
