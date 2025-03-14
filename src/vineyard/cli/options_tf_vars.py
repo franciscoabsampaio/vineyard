@@ -27,7 +27,6 @@ for name, description in TF_VARS.items():
 
 def option_workspace(function: callable):
     def callback(ctx, param, value):
-        os.environ["TF_VAR_workspace"] = value
         manage_workspace()
         return value
 

@@ -2,7 +2,7 @@
   <img src="./docs/assets/logo.png">
 </div>
 
-**`vineyard`** is an [infrastructure-as-code](https://www.hashicorp.com/en/resources/what-is-infrastructure-as-code) framework that leverages **opinionated, plug-and-play Terraform/OpenTofu
+**`vineyard`** is the **simple, **batteries-included** [infrastructure-as-code](https://www.hashicorp.com/en/resources/what-is-infrastructure-as-code)** framework that leverages **opinionated, plug-and-play Terraform/OpenTofu
 plans** to programmatically generate **data and analytics infrastructure** in Azure.
 
 ## What `vineyard` Is Not

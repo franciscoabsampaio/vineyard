@@ -3,11 +3,10 @@ provider "azurerm" {
 }
 
 locals {
-  prefix = var.global.resource_prefix
+  prefix = "${var.global.resource_prefix}-${terraform.workspace}"
 }
 
-# Loop through environments
-resource "azurerm_resource_group" "env" {
-  name     = "${local.prefix}-${var.env}-rg"
+resource "azurerm_resource_group" "ws" {
+  name     = "${local.prefix}-rg"
   location = var.global.region
 }
