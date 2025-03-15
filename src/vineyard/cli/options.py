@@ -13,17 +13,13 @@ def option_auto_approve(function: callable):
     )(function)
 
 
-def option_path_to_library(function: callable):
-    def callback(ctx, param, value):
-        echo(f"--path-to-library: {value}", log_level="DEBUG")
-        return value
-    
+def option_path_to_library(function: callable):    
     return click.option(
         '--path-to-library', '-p', '-path-to-library',
         help='Path to the directory with all infrastructure plans.',
         default='./library',
         envvar='VINEYARD_PATH_TO_LIBRARY',
-        callback=callback,
+        required=True,
         show_default=True,
     )(function)
 
@@ -75,7 +71,6 @@ def options_tf(function: callable):
     function = option_upgrade(function)
     function = option_recursive(function)
     function = option_runner(function)
-    function = option_path_to_library(function)
     function = argument_plan(function)
 
     return function
