@@ -1,7 +1,7 @@
 <p align="center">
    <a href="https://github.com/franciscoabsampaio/vineyard">
       <picture>
-         <img src="https://raw.githubusercontent.com/franciscoabsampaio/vineyard/blob/main/docs/assets/logo.png" alt="vineyard" />
+         <img src="https://raw.githubusercontent.com/franciscoabsampaio/vineyard/main/docs/assets/logo.png" alt="vineyard" />
       </picture>
    </a>
 </p>
