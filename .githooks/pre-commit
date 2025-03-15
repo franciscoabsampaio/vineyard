@@ -1,3 +1,4 @@
 set -e
 
 ./scripts/ci/check_version.sh
+shellcheck scripts/**/*.sh
