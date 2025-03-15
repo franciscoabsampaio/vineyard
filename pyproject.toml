@@ -17,7 +17,7 @@ build-backend = "flit_core.buildapi"
 
 [tool.flit.sdist]
 include = [
-    "library",
+    "docs/assets/logo.png",
 ]
 
 [project.optional-dependencies]
