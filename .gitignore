@@ -1,3 +1,7 @@
+# Library
+library/
+library/*
+
 # Outputs
 outputs/
 outputs/*
@@ -16,13 +20,17 @@ venv*/
 .env*/
 env*/
 __pycache__/
+.pytest_cache/
+build/
 dist/
 .coverage*
 htmlcov/
 .tox/
 docs/_build/
+*.egg-info/
 
 # Local .terraform directories
+.terraform/
 **/.terraform/*
 src/.terraform/**
 
