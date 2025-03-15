@@ -30,7 +30,7 @@ plans** to programmatically generate **data and analytics infrastructure** in Az
 
 ✅ For repeatable deployments, across many tenants!
 
-**`vinery` comes in two parts:**
+### `vinery` comes in two parts
 
 - A [**library**](https://github.com/franciscoabsampaio/vineyard/blob/main/docs/library.md) 📚 of plans for managing Azure infrastructure for data and analytics, that is:
 
