@@ -1,13 +1,13 @@
+from __future__ import annotations
 from collections import deque
 import matplotlib.pyplot as plt
 import networkx as nx
 import os
-from typing import Self
 from vinery.io import DIRECTORIES, echo
 
 
 class DependencyGraph(nx.DiGraph):
-    def from_library(self, path_to_library: str) -> Self:
+    def from_library(self, path_to_library: str) -> DependencyGraph:
         """
         Scans all subfolders in the path_to_library directory and builds a dependency graph.
         """
@@ -27,7 +27,7 @@ class DependencyGraph(nx.DiGraph):
         return self
     
 
-    def from_node(self, node: str) -> Self:
+    def from_node(self, node: str) -> DependencyGraph:
         """
         Function to create a new DependencyGraph object from a single node.
         """
@@ -35,7 +35,7 @@ class DependencyGraph(nx.DiGraph):
         return self
 
 
-    def from_nodes(self, nodes: set[str]) -> Self:
+    def from_nodes(self, nodes: set[str]) -> DependencyGraph:
         """
         Function to create a new DependencyGraph object from a single node.
         """
@@ -43,7 +43,7 @@ class DependencyGraph(nx.DiGraph):
         return self
     
     
-    def wsubgraph(self, nodes: set[str]) -> Self:
+    def wsubgraph(self, nodes: set[str]) -> DependencyGraph:
         """
         'w' stands for writable.
         Whereas subgraph() creates a Graph view,
@@ -77,7 +77,7 @@ class DependencyGraph(nx.DiGraph):
         return visited
     
 
-    def from_nodes_wsubgraph(self, nodes: tuple[str]) -> Self:
+    def from_nodes_wsubgraph(self, nodes: tuple[str]) -> DependencyGraph:
         """
         Function to create a new DependencyGraph object from a subgraph,
         given any number of nodes - which the wsubgraph must include.
@@ -101,7 +101,7 @@ class DependencyGraph(nx.DiGraph):
         echo(f"graph.png was saved to {target_directory}.", log_level="INFO")
 
 
-    def subtract(self, other: Self) -> Self:
+    def subtract(self, other: DependencyGraph) -> DependencyGraph:
         """
         Subtracts nodes and edges from the current graph.
         """
@@ -111,7 +111,7 @@ class DependencyGraph(nx.DiGraph):
         return self
     
 
-    def add(self, other: Self) -> Self:
+    def add(self, other: DependencyGraph) -> DependencyGraph:
         """
         Adds nodes and edges from another graph.
         """
