@@ -32,7 +32,7 @@ plans** to programmatically generate **data and analytics infrastructure** in Az
   - **Opinionated:** reasonable choices are made for each resource, allowing for a *sane* amount of configuration.
   - **Plug-and-play:** each plan is designed to provide unique, but complementary, components to the infrastructure.
 
-- The [**vine**](https://github.com/franciscoabsampaio/vineyard/blob/main/docs/vine.md) 🍃 CLI, responsible for parsing through each plan's dependencies, builds the project's plan dependency graph, and batch execution of Terraform/OpenTofu commands on the selected plans.
+- The [**vine**](https://github.com/franciscoabsampaio/vineyard/blob/main/docs/vine.md) 🍃 CLI, a thin wrapper on the Terraform/OpenTofu CLI, responsible for parsing through each plan's dependencies, builds the project's plan dependency graph, and batch execution of Terraform/OpenTofu commands on the selected plans.
 
 Simply choose which components to include from the library - **vine** determines the required dependencies, tells you which inputs to provide, and executes everything in sequence - allowing you (or your CI) to sit back and pour some of your **`vinery`**'s best grape juice. 🍷
 

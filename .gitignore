@@ -1,7 +1,3 @@
-# Library
-library/default/
-library/global.tfvars
-
 # Outputs
 outputs/
 outputs/*
@@ -33,6 +29,7 @@ docs/_build/
 .terraform/
 **/.terraform/*
 src/.terraform/**
+terraform.tfstate.d/
 
 # .tfstate files
 *.tfstate

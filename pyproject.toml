@@ -15,6 +15,11 @@ dependencies = [
 requires = ["flit_core<4"]
 build-backend = "flit_core.buildapi"
 
+[tool.flit.sdist]
+include = [
+    "library",
+]
+
 [project.optional-dependencies]
 test = [
     "pytest >=2.7.3",
