@@ -29,5 +29,5 @@ jobs:
           python-version: ${{ matrix.python }}
           allow-prereleases: true
           cache: pip
-      - run: pip install '[test]'
+      - run: pip install '.[test]'
       - run: python -m pytest
