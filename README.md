@@ -9,7 +9,7 @@
 [![PyPI](https://img.shields.io/pypi/v/vinery)](https://pypi.org/project/vinery/)
 [![Supported Python
 versions](https://img.shields.io/pypi/pyversions/vinery.svg)](https://pypi.org/project/vinery/)
-[![check](https://github.com/franciscoabsampaio/vinery/actions/workflows/test.yaml/badge.svg)](https://github.com/franciscoabsampaio/vinery/actions/workflows/test.yaml)
+[![check](https://github.com/franciscoabsampaio/vineyard/actions/workflows/test.yaml/badge.svg)](https://github.com/franciscoabsampaio/vineyard/actions/workflows/test.yaml)
 
 **`vinery`** is the **simple, **batteries-included** [infrastructure-as-code](https://www.hashicorp.com/en/resources/what-is-infrastructure-as-code)** framework that leverages **opinionated, plug-and-play Terraform/OpenTofu
 plans** to programmatically generate **data and analytics infrastructure** in Azure.
