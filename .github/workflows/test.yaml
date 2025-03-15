@@ -9,25 +9,39 @@ jobs:
   tests:
     name: ${{ matrix.name || matrix.python }}
     runs-on: ${{ matrix.os || 'ubuntu-latest' }}
+
     strategy:
       fail-fast: false
       matrix:
+        tf_runner: ['terraform', 'tofu']
+        tf_version: ['1.6', '1.7', '1.8', '1.9', '1.10', '1.11']
+        python: ['3.13', '3.12', '3.11', '3.10', '3.9', '3.8']
         include:
-          - {python: '3.13'}
-          - {python: '3.12'}
           - {name: Windows, python: '3.12', os: windows-latest}
           - {name: Mac, python: '3.12', os: macos-latest}
-          - {python: '3.11'}
-          - {python: '3.10'}
-          - {python: '3.9'}
-          - {python: '3.8'}
           - {name: PyPy, python: 'pypy-3.10', tox: pypy310}
+        exclude:
+          # Remove versions not available in OpenTofu
+          - { tf_runner: 'tofu', tf_version: '1.10' }
+          - { tf_runner: 'tofu', tf_version: '1.11' }
+          
     steps:
+      - uses: opentofu/setup-opentofu@v1
+        if: matrix.tf_runner == 'tofu'
+        with:
+          tofu_version: ${{ matrix.tf_version }}
+
+      - uses: hashicorp/setup-terraform@v3
+        if: matrix.tf_runner == 'terraform'
+        with:
+          terraform_version: ${{ matrix.tf_version }}
+
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      
       - uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
         with:
           python-version: ${{ matrix.python }}
           allow-prereleases: true
           cache: pip
       - run: pip install '.[test]'
-      - run: python -m pytest
+      - run: VINERY_RUNNER=${{ matrix.tf_runner }} python -m pytest

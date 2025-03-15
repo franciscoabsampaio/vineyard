@@ -43,6 +43,7 @@ def option_runner(function: callable):
         '--runner', '-r', '-runner',
         help='Select the preferred runner for managing infrastructure.',
         default='terraform',
+        envvar='VINERY_RUNNER',
         show_default=True,
         callback=callback
     )(function)

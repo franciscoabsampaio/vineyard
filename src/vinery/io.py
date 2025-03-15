@@ -58,14 +58,16 @@ def echo(message: str, log_level: str = "INFO") -> None:
 
     message = f"{datetime.now().time().isoformat(timespec='seconds')} vinery: [{log_level}] {message}"
 
-    match log_level:
-        case "DEBUG":
-            click.secho(message)
-        case "INFO":
-            click.secho(message, fg="blue", bold=True)
-        case "WARNING":
-            click.secho(message, fg="yellow")
-        case "SUCCESS":
-            click.secho(message, fg="green", bold=True)
-        case "ERROR":
-            click.secho(message, fg="red", bold=True, err=True)
+    if log_level == "DEBUG":
+        click.secho(message)
+    elif log_level == "INFO":
+        click.secho(message, fg="blue", bold=True)
+    elif log_level == "WARNING":
+        click.secho(message, fg="yellow")
+    elif log_level == "SUCCESS":
+        click.secho(message, fg="green", bold=True)
+    elif log_level == "ERROR":
+        click.secho(message, fg="red", bold=True, err=True)
+    else:
+        click.secho(message, err=True)
+        click.secho(f"Log level '{log_level}' is not supported.", fg="red", bold=True, err=True)
