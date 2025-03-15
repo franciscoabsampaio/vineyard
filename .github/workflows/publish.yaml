@@ -68,7 +68,7 @@ jobs:
     # files in the draft release.
     environment:
       name: publish
-      url: https://pypi.org/project/${{ github.repository }}/${{ github.ref_name }}
+      url: https://pypi.org/project/vinery/${{ github.ref_name }}
     runs-on: ubuntu-latest
     permissions:
       id-token: write
