@@ -1,7 +1,7 @@
 import pytest
 import subprocess
 from unittest.mock import patch, MagicMock
-from vineyard.tf import load_runners, SUPPORTED_RUNNERS, tf
+from vinery.tf import load_runners, SUPPORTED_RUNNERS, tf
 
 
 def test_load_runners_returns_all_runners_if_all_runners_exist():
@@ -19,14 +19,14 @@ def mock_subprocess_run():
 @pytest.fixture
 def mock_update_file():
     """Mock update_file function to prevent actual file writing."""
-    with patch("vineyard.tf.update_file") as mock_update:
+    with patch("vinery.tf.update_file") as mock_update:
         yield mock_update
 
 
 @pytest.fixture
 def mock_echo():
     """Mock echo function to suppress output in tests."""
-    with patch("vineyard.tf.echo") as mock_echo_fn:
+    with patch("vinery.tf.echo") as mock_echo_fn:
         yield mock_echo_fn
 
 

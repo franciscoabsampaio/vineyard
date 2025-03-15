@@ -7,7 +7,7 @@ import shutil
 
 
 DIRECTORIES = {
-    'tmp': '/tmp/vineyard',
+    'tmp': '/tmp/vinery',
     'output': f'{Path().resolve()}/outputs'
 }
 LOG_LEVELS = ["DEBUG", "INFO", "WARNING", "SUCCESS", "ERROR"]
@@ -25,7 +25,7 @@ def set_log_level(log_level: str) -> None:
 
 
 def setup_library(path_to_library: str) -> None:
-    package_library_path = files("vineyard").joinpath("library")
+    package_library_path = files("vinery").joinpath("library")
     # Copy files from package to user-specified directory
     shutil.copytree(package_library_path, os.path.join(path_to_library), dirs_exist_ok=True)
 
@@ -56,7 +56,7 @@ def echo(message: str, log_level: str = "INFO") -> None:
     if LOG_LEVELS.index(log_level) < LOG_LEVELS.index(os.getenv("VINE_LOG_LEVEL", "INFO")):
         return  # Suppress messages below the global log level
 
-    message = f"{datetime.now().time().isoformat(timespec='seconds')} vineyard: [{log_level}] {message}"
+    message = f"{datetime.now().time().isoformat(timespec='seconds')} vinery: [{log_level}] {message}"
 
     match log_level:
         case "DEBUG":

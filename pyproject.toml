@@ -1,5 +1,5 @@
 [project]
-name = "vineyard"
+name = "vinery"
 version = "0.1.0"
 description = "CLI tool for building modular infrastructure"
 readme = "README.md"
@@ -21,4 +21,4 @@ test = [
 ]
 
 [project.scripts]
-vine = "vineyard.cli.cli:cli"
+vine = "vinery.cli.cli:cli"

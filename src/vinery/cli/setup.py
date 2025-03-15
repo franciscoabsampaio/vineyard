@@ -1,10 +1,10 @@
-from vineyard.io import DIRECTORIES, setup_directories, set_log_level, setup_library, echo
+from vinery.io import DIRECTORIES, setup_directories, set_log_level, setup_library, echo
 import os
 
 
 def setup(log_level: str, path_to_library: str):
     """
-    Set up the vineyard CLI.
+    Set up the vinery CLI.
     """
     if all([os.path.isdir(dir) for dir in DIRECTORIES.values()]):
         echo(f"Working directories already exist.", log_level="DEBUG")

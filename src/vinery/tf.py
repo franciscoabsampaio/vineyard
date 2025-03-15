@@ -1,7 +1,7 @@
 import os
 import subprocess
-from vineyard.dependency_graph import DependencyGraph
-from vineyard.io import read_file, update_file, echo
+from vinery.dependency_graph import DependencyGraph
+from vinery.io import read_file, update_file, echo
 
 SUPPORTED_RUNNERS=["terraform", "tofu"]
 

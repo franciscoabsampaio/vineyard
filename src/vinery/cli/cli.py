@@ -1,10 +1,10 @@
 import click
 import subprocess
-from vineyard.cli.options import option_path_to_library, options_tf, option_runner, option_auto_approve
-from vineyard.cli.options_tf_vars import options_tf_vars
-from vineyard.io import LOG_LEVELS
-from vineyard.cli.setup import setup
-from vineyard import tf
+from vinery.cli.options import option_path_to_library, options_tf, option_runner, option_auto_approve
+from vinery.cli.options_tf_vars import options_tf_vars
+from vinery.io import LOG_LEVELS
+from vinery.cli.setup import setup
+from vinery import tf
 
 
 @click.group()

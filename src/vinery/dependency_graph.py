@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import os
 from typing import Self
-from vineyard.io import DIRECTORIES, echo
+from vinery.io import DIRECTORIES, echo
 
 
 class DependencyGraph(nx.DiGraph):

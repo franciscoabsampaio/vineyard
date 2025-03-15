@@ -1,7 +1,7 @@
 import click
 import os
-from vineyard.io import echo
-from vineyard.tf import select_workspace
+from vinery.io import echo
+from vinery.tf import select_workspace
 
 
 TF_VARS = {

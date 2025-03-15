@@ -1,6 +1,6 @@
 # Library
 
-The library houses the plans for setting up the **`vineyard`**. Whether you take from the default library or build your own plans is up to you!
+The library houses the plans for setting up the **`vinery`**. Whether you take from the default library or build your own plans is up to you!
 
 ## Creating new plans
 

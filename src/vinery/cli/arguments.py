@@ -1,5 +1,5 @@
 import click
-from vineyard.io import echo
+from vinery.io import echo
 
 
 def argument_plan(function: callable):

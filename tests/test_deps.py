@@ -1,6 +1,6 @@
 import os
 import pytest
-from vineyard.dependency_graph import DependencyGraph
+from vinery.dependency_graph import DependencyGraph
 import networkx as nx
 
 

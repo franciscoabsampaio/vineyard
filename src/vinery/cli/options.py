@@ -1,7 +1,7 @@
 import click
 from typing import Literal
-from vineyard.cli.arguments import argument_plan
-from vineyard.io import echo
+from vinery.cli.arguments import argument_plan
+from vinery.io import echo
 
 
 def option_auto_approve(function: callable):
@@ -18,7 +18,7 @@ def option_path_to_library(function: callable):
         '--path-to-library', '-p', '-path-to-library',
         help='Path to the directory with all infrastructure plans.',
         default='./library',
-        envvar='VINEYARD_PATH_TO_LIBRARY',
+        envvar='VINERY_PATH_TO_LIBRARY',
         required=True,
         show_default=True,
     )(function)
@@ -28,7 +28,7 @@ def option_runner(function: callable):
     """
     Automatically checks if the runner is installed.
     """
-    from vineyard.tf import load_runners
+    from vinery.tf import load_runners
 
     def callback(ctx, param, value: Literal["terraform", "tofu"]):
         runners_available = load_runners()
