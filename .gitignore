@@ -1,5 +1,6 @@
 # Library
-library/*
+library/default/
+library/global.tfvars
 
 # Outputs
 outputs/

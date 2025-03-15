@@ -34,21 +34,22 @@ Simply choose which components to include from the library - **vine** determines
 
 ## Getting Started
 
-clone repo
-
-`cd vinery`
-
-`pip install .`
-
-`vine -h`
-
 ### Pre-Requisites & Disclaimers
 
 The **vine** CLI expects [OpenTofu CLI](https://opentofu.org/docs/intro/install/)/[Terraform CLI](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli), as well as [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-linux?pivots=apt) to be installed.
 
 **`vinery`** expects no different settings or configurations than how you would normally configure the Azure provider. However, our default plans **do not** support inline configuration of provider credentials, since we don't recommend it ourselves.
 
-### something something
+### Install `vinery`
+
+Simply run
+
+```bash
+pip install vinery && \
+vine version
+```
+
+to install the package and verify the installation was successful.
 
 ## This repository supports OpenTofu and Terraform
 

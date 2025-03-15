@@ -1,5 +1,6 @@
 import click
 import subprocess
+import vinery
 from vinery.cli.options import option_path_to_library, options_tf, option_runner, option_auto_approve
 from vinery.cli.options_tf_vars import options_tf_vars
 from vinery.io import LOG_LEVELS
@@ -30,6 +31,17 @@ def cli(ctx, log_level: str, path_to_library: str):
 
     ctx.ensure_object(dict)
     ctx.obj["path_to_library"] = path_to_library
+
+
+########################
+# version
+@cli.command(
+    help="""
+    Get the version of the CLI.
+    """
+)
+def version():
+    print(vinery.__version__)
 
 
 ########################
