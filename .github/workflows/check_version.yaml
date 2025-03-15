@@ -1,9 +1,9 @@
 name: Check Version Consistency
 
 on:
-  push:
+  pull_request:
     branches:
-      - main
+      - release
 
 jobs:
   version-check:
