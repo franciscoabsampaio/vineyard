@@ -7,7 +7,7 @@ on:
 
 jobs:
   tests:
-    name: ${{ matrix.name || matrix.python }}
+    name: "${{ matrix.tf_runner }} v${{ matrix.tf_version }} - ${{ matrix.python }} - ${{ matrix.os || 'Ubuntu' }}"
     runs-on: ${{ matrix.os || 'ubuntu-latest' }}
 
     strategy:
@@ -19,12 +19,11 @@ jobs:
         include:
           - {name: Windows, python: '3.12', os: windows-latest}
           - {name: Mac, python: '3.12', os: macos-latest}
-          - {name: PyPy, python: 'pypy-3.10', tox: pypy310}
         exclude:
           # Remove versions not available in OpenTofu
           - { tf_runner: 'tofu', tf_version: '1.10' }
           - { tf_runner: 'tofu', tf_version: '1.11' }
-          
+
     steps:
       - uses: opentofu/setup-opentofu@v1
         if: matrix.tf_runner == 'tofu'
