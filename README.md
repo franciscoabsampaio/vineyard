@@ -5,7 +5,7 @@
       </picture>
    </a>
 </p>
- 
+
 [![PyPI](https://img.shields.io/pypi/v/vinery)](https://pypi.org/project/vinery/)
 [![Supported Python
 versions](https://img.shields.io/pypi/pyversions/vinery.svg)](https://pypi.org/project/vinery/)
