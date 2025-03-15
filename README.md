@@ -1,7 +1,7 @@
 <p align="center">
    <a href="https://github.com/franciscoabsampaio/vineyard">
       <picture>
-         <img src="https://raw.githubusercontent.com/franciscoabsampaio/vineyard/docs/assets/logo.png" alt="vineyard" />
+         <img src="https://raw.githubusercontent.com/franciscoabsampaio/vineyard/blob/main/docs/assets/logo.png" alt="vineyard" />
       </picture>
    </a>
 </p>
@@ -27,12 +27,12 @@ plans** to programmatically generate **data and analytics infrastructure** in Az
 
 **`vinery` comes in two parts:**
 
-- A [**library**](https://github.com/franciscoabsampaio/vineyard/docs/library.md) 📚 of plans for managing Azure infrastructure for data and analytics, that is:
+- A [**library**](https://github.com/franciscoabsampaio/vineyard/blob/main/docs/library.md) 📚 of plans for managing Azure infrastructure for data and analytics, that is:
 
   - **Opinionated:** reasonable choices are made for each resource, allowing for a *sane* amount of configuration.
   - **Plug-and-play:** each plan is designed to provide unique, but complementary, components to the infrastructure.
 
-- The [**vine**](https://github.com/franciscoabsampaio/vineyard/docs/vine.md) 🍃 CLI, responsible for parsing through each plan's dependencies, builds the project's plan dependency graph, and batch execution of Terraform/OpenTofu commands on the selected plans.
+- The [**vine**](https://github.com/franciscoabsampaio/vineyard/blob/main/docs/vine.md) 🍃 CLI, responsible for parsing through each plan's dependencies, builds the project's plan dependency graph, and batch execution of Terraform/OpenTofu commands on the selected plans.
 
 Simply choose which components to include from the library - **vine** determines the required dependencies, tells you which inputs to provide, and executes everything in sequence - allowing you (or your CI) to sit back and pour some of your **`vinery`**'s best grape juice. 🍷
 
@@ -62,7 +62,7 @@ This project was tested on:
 - OpenTofu 1.9.0.
 - Terraform 1.6.0.
 
-Both are great options, but [we prefer OpenTofu](https://github.com/franciscoabsampaio/vineyard/docs/opentofu-vs-terraform.md).
+Both are great options, but [we prefer OpenTofu](https://github.com/franciscoabsampaio/vineyard/blob/main/docs/opentofu-vs-terraform.md).
 
 ## Known Bugs / Issues
 
