@@ -7,6 +7,26 @@ from vinery.io import DIRECTORIES, echo
 
 
 class DependencyGraph(nx.DiGraph):
+    def __add__(self, other: DependencyGraph) -> DependencyGraph:
+        """
+        Adds nodes and edges from another graph.
+        """
+        new = self.copy()
+        new.add_nodes_from(other.nodes)
+        new.add_edges_from(other.edges)
+        return new
+    
+
+    def __sub__(self, other: DependencyGraph) -> DependencyGraph:
+        """
+        Subtracts nodes and edges from the current graph.
+        """
+        new = self.copy()
+        new.remove_nodes_from(other.nodes)
+        new.remove_edges_from(other.edges)
+        return new
+
+
     def from_library(self, path_to_library: str) -> DependencyGraph:
         """
         Scans all subfolders in the path_to_library directory and builds a dependency graph.
@@ -58,7 +78,7 @@ class DependencyGraph(nx.DiGraph):
         return wsubgraph
     
 
-    def find_all_dependencies(self, node: str, visited=None) -> set:
+    def find_all_dependencies(self, node: str, visited: set = None) -> set:
         """
         Utility function to find all dependencies (parent nodes) recursively
         """
@@ -100,26 +120,6 @@ class DependencyGraph(nx.DiGraph):
 
         echo(f"graph.png was saved to {target_directory}.", log_level="INFO")
 
-
-    def subtract(self, other: DependencyGraph) -> DependencyGraph:
-        """
-        Subtracts nodes and edges from the current graph.
-        """
-        self.remove_nodes_from(other.nodes)
-        self.remove_edges_from(other.edges)
-        
-        return self
-    
-
-    def add(self, other: DependencyGraph) -> DependencyGraph:
-        """
-        Adds nodes and edges from another graph.
-        """
-        self.add_nodes_from(other.nodes)
-        self.add_edges_from(other.edges)
-        
-        return self
-    
 
     def sorted_list(self, reverse: bool = False) -> list[str]:
         """

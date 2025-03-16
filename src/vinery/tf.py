@@ -117,16 +117,16 @@ def init(graph_of_plans, path_to_library, runner, upgrade) -> DependencyGraph:
     graph_of_plans_initialized = graph_of_plans.wsubgraph(
         read_file("init_status") if not upgrade else set()
     )
-    graph_of_plans_to_initialize = graph_of_plans.subtract(graph_of_plans_initialized)
+    graph_of_plans_to_initialize = graph_of_plans - graph_of_plans_initialized
 
     if not graph_of_plans_to_initialize:
         echo("No plans require initialization. Did you mean to run -upgrade?", log_level="INFO")
         return graph_of_plans.wsubgraph(graph_of_plans_initialized.nodes)
 
-    graph_of_plans_initialized.add(tf_loop(
+    graph_of_plans_initialized += tf_loop(
         graph_of_plans_to_initialize,
         runner, f"init{' -upgrade' if upgrade else ''}", path_to_library,
-    ))
+    )
 
     update_file("init_status", graph_of_plans_initialized.nodes)
 
