@@ -106,7 +106,7 @@ def with_dependency_graph(function):
             .from_library(path_to_library)
             .from_nodes_wsubgraph(plan)
         ) if recursive else DependencyGraph().from_node(plan)
-
+        print("dependency_graph", *args)
         return function(graph_of_plans, path_to_library, *args, **kwargs)
     
     return wrapper
@@ -137,9 +137,8 @@ def with_tf_init(function):
     """
     Decorator that runs 'init' before the function.
     """
-    @with_dependency_graph
-    def wrapper(graph_of_plans, path_to_library, runner, upgrade, *args, **kwargs):
-        graph_of_plans_initialized = init(graph_of_plans, path_to_library, runner, upgrade=upgrade)
+    def wrapper(graph_of_plans, path_to_library, recursive, runner, upgrade, *args, **kwargs):
+        graph_of_plans_initialized = init(graph_of_plans, path_to_library, recursive, runner, upgrade=upgrade)
         return function(graph_of_plans_initialized, path_to_library, runner, *args, **kwargs)
 
     return wrapper
