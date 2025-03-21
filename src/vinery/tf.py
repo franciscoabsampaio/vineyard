@@ -96,37 +96,20 @@ def tf_loop(
     })
 
 
-def with_dependency_graph(function):
-    """
-    Decorator that creates the dependency graph of all relevant plans.
-    """
-    def wrapper(plan: tuple[str], path_to_library, recursive, *args, **kwargs):
-        graph_of_plans = (
-            DependencyGraph()
-            .from_library(path_to_library)
-            .from_nodes_wsubgraph(plan)
-        ) if recursive else DependencyGraph().from_node(plan)
-
-        return function(graph_of_plans, path_to_library, *args, **kwargs)
-    
-    return wrapper
-
-
-@with_dependency_graph
 def init(graph_of_plans, path_to_library, runner, upgrade) -> DependencyGraph:
     graph_of_plans_initialized = graph_of_plans.wsubgraph(
         read_file("init_status") if not upgrade else set()
     )
-    graph_of_plans_to_initialize = graph_of_plans.subtract(graph_of_plans_initialized)
+    graph_of_plans_to_initialize = graph_of_plans - graph_of_plans_initialized
 
     if not graph_of_plans_to_initialize:
         echo("No plans require initialization. Did you mean to run -upgrade?", log_level="INFO")
         return graph_of_plans.wsubgraph(graph_of_plans_initialized.nodes)
 
-    graph_of_plans_initialized.add(tf_loop(
+    graph_of_plans_initialized += tf_loop(
         graph_of_plans_to_initialize,
         runner, f"init{' -upgrade' if upgrade else ''}", path_to_library,
-    ))
+    )
 
     update_file("init_status", graph_of_plans_initialized.nodes)
 
@@ -137,7 +120,6 @@ def with_tf_init(function):
     """
     Decorator that runs 'init' before the function.
     """
-    @with_dependency_graph
     def wrapper(graph_of_plans, path_to_library, runner, upgrade, *args, **kwargs):
         graph_of_plans_initialized = init(graph_of_plans, path_to_library, runner, upgrade=upgrade)
         return function(graph_of_plans_initialized, path_to_library, runner, *args, **kwargs)

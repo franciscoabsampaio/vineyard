@@ -3,6 +3,7 @@ import subprocess
 import vinery
 from vinery.cli.options import option_path_to_library, options_tf, option_runner, option_auto_approve
 from vinery.cli.options_tf_vars import options_tf_vars
+from vinery.dependency_graph import DependencyGraph
 from vinery.io import LOG_LEVELS
 from vinery.cli.setup import setup
 from vinery import tf
@@ -28,9 +29,6 @@ def cli(ctx, log_level: str, path_to_library: str):
     Manage infrastructure plans.
     """
     setup(log_level, path_to_library)
-
-    ctx.ensure_object(dict)
-    ctx.obj["path_to_library"] = path_to_library
 
 
 ########################
@@ -64,7 +62,7 @@ def init(ctx, plan: str, runner: str, recursive: bool, upgrade: bool):
     """
     Initialize all infrastructure plans.
     """
-    tf.init(plan, ctx.obj["path_to_library"], recursive, runner, upgrade)
+    tf.init(ctx.obj["graph"], ctx.obj["path_to_library"], runner, upgrade)
 
 
 ########################
@@ -87,7 +85,7 @@ def validate(ctx, plan: str, runner: str, recursive: bool, upgrade: bool, json: 
     By default, runs 'RUNNER init -upgrade' prior to execution.
     Plans that fail to 'init' are not validated.
     """
-    tf.validate(plan, ctx.obj["path_to_library"], recursive, runner, upgrade, json)
+    tf.validate(ctx.obj["graph"], ctx.obj["path_to_library"], runner, upgrade, json)
 
 
 ########################
@@ -101,7 +99,7 @@ def plan(ctx, plan: str, runner: str, recursive: bool, upgrade: bool):
     Execute a dry run of all infrastructure plans,
     showing what changes would be made.
     """
-    tf.plan(plan, ctx.obj["path_to_library"], recursive, runner, upgrade)
+    tf.plan(ctx.obj["graph"], ctx.obj["path_to_library"], runner, upgrade)
 
 
 ########################
@@ -115,7 +113,7 @@ def apply(ctx, plan: str, runner: str, recursive: bool, upgrade: bool, auto_appr
     """
     Apply the plans, building the infrastructure and applying any latent changes.
     """
-    tf.apply(plan, ctx.obj["path_to_library"], recursive, runner, upgrade, auto_approve)
+    tf.apply(ctx.obj["graph"], ctx.obj["path_to_library"], runner, upgrade, auto_approve)
 
 
 ########################
@@ -128,4 +126,4 @@ def destroy(ctx, plan: str, runner: str, recursive: bool, upgrade: bool, auto_ap
     """
     Destroy all infrastructure described in the associated set of plans.
     """
-    tf.destroy(plan, ctx.obj["path_to_library"], recursive, runner, upgrade, auto_approve)
+    tf.destroy(ctx.obj["graph"], ctx.obj["path_to_library"], runner, upgrade, auto_approve)
