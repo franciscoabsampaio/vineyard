@@ -30,6 +30,7 @@ class DependencyGraph(nx.DiGraph):
     def from_library(self, path_to_library: str) -> DependencyGraph:
         """
         Scans all subfolders in the path_to_library directory and builds a dependency graph.
+        Folders MUST contain a file named '_deps.conf' with a list of dependencies.
         """
         for (root, _, files) in os.walk(path_to_library, topdown=True):
             if "_deps.conf" in files:
