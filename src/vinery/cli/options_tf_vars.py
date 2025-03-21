@@ -1,6 +1,5 @@
 import click
 import os
-from vinery.io import echo
 from vinery.tf import select_workspace
 
 

@@ -14,6 +14,10 @@ def argument_plan(function: callable):
         function.__doc__ = help_text
     
     def callback(ctx, param, value):
+        # Trim dependency graph up to target node plan
+        ctx.ensure_object(dict)
+        ctx.obj["graph"] = ctx.obj["graph"].from_nodes_wsubgraph(value)
+
         if value is None:
             echo("At least ONE plan is required.", log_level="ERROR")
         return [plan.strip("/") for plan in value]

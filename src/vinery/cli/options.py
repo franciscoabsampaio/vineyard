@@ -1,7 +1,26 @@
 import click
 from typing import Literal
 from vinery.cli.arguments import argument_plan
+from vinery.dependency_graph import DependencyGraph
 from vinery.io import echo
+
+
+def option_path_to_library(function: callable):    
+    def callback(ctx, param, value):
+        ctx.ensure_object(dict)
+        ctx.obj["path_to_library"] = value
+        ctx.obj["graph"] = DependencyGraph().from_library(value)
+        return value
+
+    return click.option(
+        '--path-to-library', '-p', '-path-to-library',
+        callback=callback,
+        default='./library',
+        envvar='VINERY_PATH_TO_LIBRARY',
+        help='Path to the directory with all infrastructure plans.',
+        required=True,
+        show_default=True,
+    )(function)
 
 
 def option_auto_approve(function: callable):
@@ -10,17 +29,6 @@ def option_auto_approve(function: callable):
         default=False,
         is_flag=True,
         help="Pass -auto-approve flag to 'RUNNER apply/destroy'."
-    )(function)
-
-
-def option_path_to_library(function: callable):    
-    return click.option(
-        '--path-to-library', '-p', '-path-to-library',
-        help='Path to the directory with all infrastructure plans.',
-        default='./library',
-        envvar='VINERY_PATH_TO_LIBRARY',
-        required=True,
-        show_default=True,
     )(function)
 
 
@@ -50,10 +58,17 @@ def option_runner(function: callable):
 
 
 def option_recursive(function: callable):
+    def callback(ctx, param, value):
+        if not value:
+            ctx.ensure_object(dict)
+            ctx.obj["graph"] = DependencyGraph().from_node(ctx.params.get('plan'))
+        return value
+    
     return click.option(
         '--recursive', '-rr', '-recursive',
-        help='Apply the command recursively.',
+        callback=callback,
         default=True,
+        help='Apply the command recursively.',
         show_default=True,
         required=True
     )(function)
