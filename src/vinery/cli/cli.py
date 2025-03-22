@@ -94,7 +94,7 @@ def validate(ctx, plan: str, runner: str, recursive: bool, upgrade: bool, json: 
 @options_tf
 @options_tf_vars
 @click.pass_context
-def plan(ctx, plan: str, runner: str, recursive: bool, upgrade: bool):
+def plan(ctx, plan: str, runner: str, recursive: bool, upgrade: bool, workspace: str, project: str):
     """
     Execute a dry run of all infrastructure plans,
     showing what changes would be made.
@@ -109,7 +109,7 @@ def plan(ctx, plan: str, runner: str, recursive: bool, upgrade: bool):
 @option_auto_approve
 @options_tf_vars
 @click.pass_context
-def apply(ctx, plan: str, runner: str, recursive: bool, upgrade: bool, auto_approve: bool):
+def apply(ctx, plan: str, runner: str, recursive: bool, upgrade: bool, auto_approve: bool, workspace: str, project: str):
     """
     Apply the plans, building the infrastructure and applying any latent changes.
     """
@@ -122,7 +122,7 @@ def apply(ctx, plan: str, runner: str, recursive: bool, upgrade: bool, auto_appr
 @options_tf
 @option_auto_approve
 @click.pass_context
-def destroy(ctx, plan: str, runner: str, recursive: bool, upgrade: bool, auto_approve: bool):
+def destroy(ctx, plan: str, runner: str, recursive: bool, upgrade: bool, auto_approve: bool, workspace: str, project: str):
     """
     Destroy all infrastructure described in the associated set of plans.
     """

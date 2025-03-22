@@ -3,7 +3,6 @@ from typing import Literal
 from vinery.cli.arguments import argument_plan
 from vinery.dependency_graph import DependencyGraph
 from vinery.io import echo
-import sys
 
 
 def option_path_to_library(function: callable):    
@@ -43,7 +42,7 @@ def option_runner(function: callable):
         runners_available = load_runners()
         if value not in runners_available:
             echo(f"Runner '{value}' is not installed.", log_level="ERROR")
-            sys.exit(1)
+            ctx.exit(1)
         
         ctx.ensure_object(dict)
         ctx.obj['runner'] = value
