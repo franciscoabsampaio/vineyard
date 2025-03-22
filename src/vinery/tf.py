@@ -103,7 +103,9 @@ def init(graph_of_plans, path_to_library, runner, upgrade) -> DependencyGraph:
     graph_of_plans_to_initialize = graph_of_plans - graph_of_plans_initialized
 
     if not graph_of_plans_to_initialize:
-        echo("No plans require initialization. Did you mean to run -upgrade?", log_level="INFO")
+        echo("No plans require initialization.", log_level="INFO")
+        if not upgrade:
+            echo("Did you mean to run -upgrade?", log_level="INFO")
         return graph_of_plans.wsubgraph(graph_of_plans_initialized.nodes)
 
     graph_of_plans_initialized += tf_loop(
