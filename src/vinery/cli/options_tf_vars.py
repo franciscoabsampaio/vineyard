@@ -31,9 +31,9 @@ for name, (description, default) in TF_VARS.items():
 def option_workspace(function: callable):
     def callback(ctx, param, value):
         if len(value) > 7:
-            raise ValueError("Workspace name must be at most 7 characters long.")
+            raise ValueError("Workspace name must be AT MOST 7 characters long.")
         ctx.ensure_object(dict)
-        select_workspace(value, ctx.obj['runner'])
+        select_workspace(value, ctx.params.get('runner')
         return value
 
     return click.option(
