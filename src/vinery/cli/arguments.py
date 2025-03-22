@@ -1,4 +1,5 @@
 import click
+import networkx
 from vinery.io import echo
 
 
@@ -14,12 +15,19 @@ def argument_plan(function: callable):
         function.__doc__ = help_text
     
     def callback(ctx, param, value):
-        # Trim dependency graph up to target node plan
-        ctx.ensure_object(dict)
-        ctx.obj["graph"] = ctx.obj["graph"].from_nodes_wsubgraph(value)
-
-        if value is None:
+        if value == ():
             echo("At least ONE plan is required.", log_level="ERROR")
+            ctx.exit(1)
+        
+        # Trim dependency graph up to target node plan
+        echo(f"Plans provided: {value}", log_level="DEBUG")
+        ctx.ensure_object(dict)
+        try:
+            ctx.obj["graph"] = ctx.obj["graph"].from_nodes_wsubgraph(value)
+        except networkx.exception.NetworkXError:
+            echo(f"Invalid plan(s) provided: {value}", log_level="ERROR")
+            ctx.exit(1)
+
         return [plan.strip("/") for plan in value]
     
     return click.argument(
