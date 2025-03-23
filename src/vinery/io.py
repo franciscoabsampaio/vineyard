@@ -4,6 +4,7 @@ from importlib.resources import files
 from pathlib import Path
 import os
 import shutil
+import vinery
 
 
 DIRECTORIES = {
@@ -13,8 +14,8 @@ DIRECTORIES = {
 LOG_LEVELS = ["DEBUG", "INFO", "WARNING", "SUCCESS", "ERROR"]
 
 
-def setup_directories() -> None:
-    for dir in DIRECTORIES.values():
+def setup_directories(directories: str = DIRECTORIES) -> None:
+    for dir in directories.values():
         Path(dir).mkdir(parents=True, exist_ok=True)
 
 
@@ -24,10 +25,48 @@ def set_log_level(log_level: str) -> None:
     os.environ["VINE_LOG_LEVEL"] = os.getenv("VINE_LOG_LEVEL", log_level)
 
 
+def find_library_path() -> str:
+    """
+    Locate vinery's 'library' directory in both installed and development modes.
+
+    Returns:
+        str: Absolute path to the 'library' directory.
+
+    Raises:
+        FileNotFoundError: If the 'library' directory cannot be found.
+    """
+    # Try using importlib for installed mode
+    try:
+        path = str(files(vinery).joinpath("library"))
+        if os.path.isdir(path):
+            return path
+    except ModuleNotFoundError:
+        pass  # Fallback to manual lookup
+
+    # Determine vinery root path
+    vinery_root = os.path.dirname(vinery.__file__)
+
+    # Candidate locations for development mode
+    candidate_paths = [
+        os.path.join(vinery_root, "..", "library"),   # Case: src/vinery
+        os.path.join(vinery_root, "..", "..", "library")  # Case: vinery/
+    ]
+
+    # Find the first valid path
+    for path in candidate_paths:
+        abs_path = os.path.abspath(path)
+        if os.path.isdir(abs_path):
+            return abs_path
+
+    # If we can't find it, raise an error
+    raise FileNotFoundError("Could not locate 'library' in either installed or development mode.")
+
+
 def setup_library(path_to_library: str) -> None:
-    package_library_path = files("vinery").joinpath("library")
+    if not os.path.isdir(path_to_library):
+        raise FileNotFoundError(f"Library path {path_to_library} does not exist!")
     # Copy files from package to user-specified directory
-    shutil.copytree(package_library_path, path_to_library, dirs_exist_ok=True)
+    shutil.copytree(find_library_path(), path_to_library, dirs_exist_ok=True)
 
 
 def read_file(filename: str, dir: str = 'tmp') -> set[str]:
