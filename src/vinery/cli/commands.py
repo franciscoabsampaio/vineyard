@@ -40,7 +40,7 @@ def version():
     """
     Get the version of the CLI.
     """
-    print(vinery.__version__)
+    click.echo(vinery.__version__)
 
 
 ########################
