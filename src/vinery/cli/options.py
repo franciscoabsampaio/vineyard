@@ -1,8 +1,8 @@
 import click
 from typing import Literal
-from vinery.cli.arguments import argument_plan
 from vinery.dependency_graph import DependencyGraph
 from vinery.io import echo
+from vinery.tf import select_workspace
 
 
 def option_path_to_library(function: callable):    
@@ -60,9 +60,8 @@ def option_runner(function: callable):
 
 def option_recursive(function: callable):
     def callback(ctx, param, value):
-        if not value:
-            ctx.ensure_object(dict)
-            ctx.obj["graph"] = DependencyGraph().from_node(ctx.params.get('plan'))
+        ctx.ensure_object(dict)
+        ctx.obj['recursive'] = value
         return value
     
     return click.option(
@@ -84,10 +83,31 @@ def option_upgrade(function: callable):
     )(function)
 
 
-def options_tf(function: callable):
+def option_workspace(function: callable):
+    def callback(ctx, param, value):
+        if len(value) > 7:
+            echo("Workspace name must be AT MOST 7 characters long.", log_level="ERROR")
+            ctx.exit(1)
+        
+        ctx.ensure_object(dict)
+        ctx.obj["workspace"] = value
+        
+        return value
+
+    return click.option(
+        '--workspace', '-w', '-workspace',
+        default='default',
+        callback=callback,
+        envvar="TF_VAR_workspace",
+        help="The current workspace against which all plans are evaluated/executed.",
+        required=True,
+        show_default=True,
+    )(function)
+
+
+def options_init(function: callable):
     function = option_upgrade(function)
     function = option_recursive(function)
     function = option_runner(function)
-    function = argument_plan(function)
-
+    function = option_workspace(function)
     return function

@@ -27,7 +27,7 @@ def set_log_level(log_level: str) -> None:
 def setup_library(path_to_library: str) -> None:
     package_library_path = files("vinery").joinpath("library")
     # Copy files from package to user-specified directory
-    shutil.copytree(package_library_path, os.path.join(path_to_library), dirs_exist_ok=True)
+    shutil.copytree(package_library_path, path_to_library, dirs_exist_ok=True)
 
 
 def read_file(filename: str, dir: str = 'tmp') -> set[str]:
