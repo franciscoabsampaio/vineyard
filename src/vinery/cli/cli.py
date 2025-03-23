@@ -26,7 +26,7 @@ class OrderedGroup(click.Group):
 
 @click.group(cls=OrderedGroup)
 @click.option(
-    '--log_level', '-l',
+    '--log-level', '-l', '-log-level',
     default="INFO",
     envvar="VINE_LOG_LEVEL",
     help=f"""
@@ -43,9 +43,4 @@ def cli(ctx, log_level: str, path_to_library: str):
     """
     Manage infrastructure plans.
     """
-    setup(log_level, path_to_library)
-
-
-# for cmd in :
-#     cli.add_command(cmd)
-
+    setup(ctx, log_level, path_to_library)
