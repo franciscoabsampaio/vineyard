@@ -43,4 +43,4 @@ jobs:
           allow-prereleases: true
           cache: pip
       - run: pip install '.[test]'
-      - run: VINERY_RUNNER=${{ matrix.tf_runner }} python -m pytest
+      - run: VINERY_RUNNER=${{ matrix.tf_runner }} python -m pytest -vs
