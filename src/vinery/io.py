@@ -57,7 +57,8 @@ def find_library_path() -> str:
         abs_path = os.path.abspath(path)
         if os.path.isdir(abs_path):
             return abs_path
-
+    print(candidate_paths)
+    print(os.listdir())
     # If we can't find it, raise an error
     raise FileNotFoundError("Could not locate 'library' in either installed or development mode.")
 
