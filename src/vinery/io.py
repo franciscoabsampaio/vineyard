@@ -4,6 +4,7 @@ from importlib.resources import files
 from pathlib import Path
 import os
 import shutil
+import vinery
 
 
 DIRECTORIES = {
@@ -13,8 +14,8 @@ DIRECTORIES = {
 LOG_LEVELS = ["DEBUG", "INFO", "WARNING", "SUCCESS", "ERROR"]
 
 
-def setup_directories() -> None:
-    for dir in DIRECTORIES.values():
+def setup_directories(directories: str = DIRECTORIES) -> None:
+    for dir in directories.values():
         Path(dir).mkdir(parents=True, exist_ok=True)
 
 
@@ -24,10 +25,40 @@ def set_log_level(log_level: str) -> None:
     os.environ["VINE_LOG_LEVEL"] = os.getenv("VINE_LOG_LEVEL", log_level)
 
 
+def find_library_path() -> str:
+    """
+    Locate vinery's 'library' directory in both installed and development modes.
+
+    Returns:
+        str: Absolute path to the 'library' directory.
+    """
+    # Try using importlib for installed mode
+    try:
+        path = str(files(vinery).joinpath("library"))
+        print(files(vinery))
+        print(str(files(vinery).joinpath("library")))
+        print(os.path.dirname(vinery.__file__))
+        print(os.listdir(os.path.dirname(vinery.__file__)))
+        if os.path.isdir(path):
+            return path
+    except ModuleNotFoundError:
+        pass  # Fallback to manual lookup
+
+    # Fallback to development mode directory structure
+    # library/ and src/ are siblings
+    vinery_root = os.path.dirname(vinery.__file__)
+    abs_path = os.path.abspath(os.path.join(vinery_root, "..", "..", "library"))
+    if os.path.isdir(abs_path):
+        return abs_path
+    else:
+        raise FileNotFoundError("Could not locate 'library' in either installed or development mode.")
+
+
 def setup_library(path_to_library: str) -> None:
-    package_library_path = files("vinery").joinpath("library")
+    if not os.path.isdir(path_to_library):
+        raise FileNotFoundError(f"Library path {path_to_library} does not exist!")
     # Copy files from package to user-specified directory
-    shutil.copytree(package_library_path, os.path.join(path_to_library), dirs_exist_ok=True)
+    shutil.copytree(find_library_path(), path_to_library, dirs_exist_ok=True)
 
 
 def read_file(filename: str, dir: str = 'tmp') -> set[str]:
@@ -58,14 +89,16 @@ def echo(message: str, log_level: str = "INFO") -> None:
 
     message = f"{datetime.now().time().isoformat(timespec='seconds')} vinery: [{log_level}] {message}"
 
-    match log_level:
-        case "DEBUG":
-            click.secho(message)
-        case "INFO":
-            click.secho(message, fg="blue", bold=True)
-        case "WARNING":
-            click.secho(message, fg="yellow")
-        case "SUCCESS":
-            click.secho(message, fg="green", bold=True)
-        case "ERROR":
-            click.secho(message, fg="red", bold=True, err=True)
+    if log_level == "DEBUG":
+        click.secho(message)
+    elif log_level == "INFO":
+        click.secho(message, fg="blue", bold=True)
+    elif log_level == "WARNING":
+        click.secho(message, fg="yellow")
+    elif log_level == "SUCCESS":
+        click.secho(message, fg="green", bold=True)
+    elif log_level == "ERROR":
+        click.secho(message, fg="red", bold=True, err=True)
+    else:
+        click.secho(message, err=True)
+        click.secho(f"Log level '{log_level}' is not supported.", fg="red", bold=True, err=True)

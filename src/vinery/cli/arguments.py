@@ -14,8 +14,14 @@ def argument_plan(function: callable):
         function.__doc__ = help_text
     
     def callback(ctx, param, value):
-        if value is None:
+        if value == ():
             echo("At least ONE plan is required.", log_level="ERROR")
+            ctx.exit(1)
+        
+        echo(f"Plans provided: {value}", log_level="DEBUG")
+        ctx.ensure_object(dict)
+        ctx.obj['plan'] = value
+
         return [plan.strip("/") for plan in value]
     
     return click.argument(

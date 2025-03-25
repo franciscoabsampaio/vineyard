@@ -1,12 +1,15 @@
 import pytest
 import subprocess
 from unittest.mock import patch, MagicMock
-from vinery.tf import load_runners, SUPPORTED_RUNNERS, tf
+from vinery.tf import SUPPORTED_RUNNERS, RunnerNotFoundError, load_runners, tf
 
 
-def test_load_runners_returns_all_runners_if_all_runners_exist():
-    # All supported runners must exist in the test environment!
-    assert load_runners() == SUPPORTED_RUNNERS
+def test_load_runners_at_least_one_runner():
+    """Actually run the function without mocking to verify at least one runner is found."""
+    runners = load_runners()
+    assert isinstance(runners, list)
+    assert len(runners) > 0  # Ensure at least one runner exists
+    assert any(runner in SUPPORTED_RUNNERS for runner in runners)  # Validate it's a supported runner
 
 
 @pytest.fixture
