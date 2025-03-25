@@ -38,6 +38,10 @@ def find_library_path() -> str:
     # Try using importlib for installed mode
     try:
         path = str(files(vinery).joinpath("library"))
+        print(files(vinery))
+        print(str(files(vinery).joinpath("library")))
+        print(os.path.dirname(vinery.__file__))
+        print(os.listdir(os.path.dirname(vinery.__file__)))
         if os.path.isdir(path):
             return path
     except ModuleNotFoundError:
@@ -57,7 +61,7 @@ def find_library_path() -> str:
         abs_path = os.path.abspath(path)
         if os.path.isdir(abs_path):
             return abs_path
-    print(os.listdir(vinery_root))
+
     # If we can't find it, raise an error
     raise FileNotFoundError("Could not locate 'library' in either installed or development mode.")
 
