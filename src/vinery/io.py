@@ -31,9 +31,6 @@ def find_library_path() -> str:
 
     Returns:
         str: Absolute path to the 'library' directory.
-
-    Raises:
-        FileNotFoundError: If the 'library' directory cannot be found.
     """
     # Try using importlib for installed mode
     try:
@@ -47,23 +44,14 @@ def find_library_path() -> str:
     except ModuleNotFoundError:
         pass  # Fallback to manual lookup
 
-    # Determine vinery root path
+    # Fallback to development mode directory structure
+    # library/ and src/ are siblings
     vinery_root = os.path.dirname(vinery.__file__)
-
-    # Candidate locations for development mode
-    candidate_paths = [
-        os.path.join(vinery_root, "..", "library"),   # Case: src/vinery
-        os.path.join(vinery_root, "..", "..", "library")  # Case: vinery/
-    ]
-
-    # Find the first valid path
-    for path in candidate_paths:
-        abs_path = os.path.abspath(path)
-        if os.path.isdir(abs_path):
-            return abs_path
-
-    # If we can't find it, raise an error
-    raise FileNotFoundError("Could not locate 'library' in either installed or development mode.")
+    abs_path = os.path.abspath(os.path.join(vinery_root, "..", "..", "library"))
+    if os.path.isdir(abs_path):
+        return abs_path
+    else:
+        raise FileNotFoundError("Could not locate 'library' in either installed or development mode.")
 
 
 def setup_library(path_to_library: str) -> None:
