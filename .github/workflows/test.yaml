@@ -43,6 +43,7 @@ jobs:
           allow-prereleases: true
           cache: pip
       - run: pip install build
+      - run: python -m build
       - run: pip install --force-reinstall dist/*.whl  # Install the built package, not the source
       - run: pip install '.[test]' --no-deps  # Install the test dependencies without reinstalling the pkg
       - run: VINERY_RUNNER=${{ matrix.tf_runner }} python -m pytest -vs
