@@ -7,7 +7,7 @@ on:
 
 jobs:
   tests:
-    name: "${{ matrix.tf_runner }} v${{ matrix.tf_version }} - ${{ matrix.python }} - ${{ matrix.os || 'Ubuntu' }}"
+    name: "${{ matrix.tf_runner }} v${{ matrix.tf_version }} - Py${{ matrix.python }} - ${{ matrix.os || 'Ubuntu' }}"
     runs-on: ${{ matrix.os || 'ubuntu-latest' }}
 
     strategy:
@@ -25,25 +25,43 @@ jobs:
           - { tf_runner: 'tofu', tf_version: '1.11' }
 
     steps:
-      - uses: opentofu/setup-opentofu@v1
+      - name: Setup OpenTofu
+        uses: opentofu/setup-opentofu@v1
         if: matrix.tf_runner == 'tofu'
         with:
           tofu_version: ${{ matrix.tf_version }}
 
-      - uses: hashicorp/setup-terraform@v3
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
         if: matrix.tf_runner == 'terraform'
         with:
           terraform_version: ${{ matrix.tf_version }}
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-      
-      - uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
           allow-prereleases: true
-          cache: pip
-      - run: pip install build
-      - run: python -m build
-      - run: pip install '.[test]'  # Install the test dependencies
-      - run: pip install --force-reinstall dist/*.whl  # Reinstall the built package over the source
-      - run: VINERY_RUNNER=${{ matrix.tf_runner }} python -m pytest -vs
+          cache: 'pip' # Cache dependencies installed by pip (including hatch itself)
+          cache-dependency-path: 'pyproject.toml' # Key the cache on your project file
+
+      # --- Install Hatch ---
+      - name: Install Hatch
+        run: pip install hatch
+
+      # Although 'hatch run' can often work with editable installs,
+      # explicitly building first ensures your package *is* buildable
+      # and catches packaging errors early.
+      - name: Build package
+        run: hatch build
+
+      # 1. Activate/prepare the 'test' environment (installing deps from pyproject.toml)
+      # 2. Execute the script named 'run' defined in [tool.hatch.envs.test.scripts]
+      # 3. Pass any arguments after '--' to the script (pytest in this case)
+      # 4. Environment variables like VINERY_RUNNER are passed through.
+      - name: Run tests using hatch
+        run: |
+          VINERY_RUNNER=${{ matrix.tf_runner }} hatch run test:run -- -vs

@@ -1,6 +1,6 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
 name = "vinery"
@@ -27,12 +27,26 @@ test = [
 [project.scripts]
 vine = "vinery.cli.cli:cli"
 
-[tool.setuptools]
-packages = { find = { where = ["src"] } }
-include-package-data = true
 
-# [tool.setuptools.package-data]
-# vinery = ["../library/*"]  # Ensure `library/` is included
+# --- HATCH specific configuration ---
 
-# [tool.setuptools.exclude-package-data]
-# vinery = ["tests/*"]  # Exclude tests if needed
+[tool.hatch.version]
+# You can manage the version source if needed, e.g.:
+path = "src/vinery/__init__.py"
+
+[tool.hatch.build]
+
+[tool.hatch.build.targets.wheel]
+# It maps the 'src/vinery' directory to the 'vinery' package in the wheel.
+packages = ["src/vinery"]
+
+# The key is the TARGET path within the wheel (relative to wheel root).
+# The value is the SOURCE path relative to the project root.
+force-include = { "library" = "/library" }
+
+[tool.hatch.envs.test]
+dependencies = [
+  "pytest"
+]
+[tool.hatch.envs.test.scripts]
+run = "pytest {args}"
