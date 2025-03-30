@@ -18,6 +18,7 @@ build-backend = "flit_core.buildapi"
 [tool.flit.sdist]
 include = [
     "library",
+    "src/vinery"
 ]
 
 [project.optional-dependencies]
