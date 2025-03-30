@@ -18,6 +18,7 @@ env*/
 __pycache__/
 .pytest_cache/
 build/
+vinery-*/
 dist/
 .coverage*
 htmlcov/
