@@ -18,11 +18,16 @@ def argument_plan(function: callable):
             echo("At least ONE plan is required.", log_level="ERROR")
             ctx.exit(1)
         
-        echo(f"Plans provided: {value}", log_level="DEBUG")
+        plans_stripped = [plan.strip("/") for plan in value]
+        if not all(plans_stripped):
+            echo("Invalid plan provided. Plans must not be '/'.", log_level="ERROR")
+            ctx.exit(1)
+        
+        echo(f"Plans provided: {plans_stripped}", log_level="DEBUG")
         ctx.ensure_object(dict)
-        ctx.obj['plan'] = value
+        ctx.obj['plan'] = plans_stripped
 
-        return [plan.strip("/") for plan in value]
+        return plans_stripped
     
     return click.argument(
         'plan',
