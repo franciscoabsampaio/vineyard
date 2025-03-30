@@ -40,9 +40,9 @@ path = "src/vinery/__init__.py"
 # It maps the 'src/vinery' directory to the 'vinery' package in the wheel.
 packages = ["src/vinery"]
 
-# The key is the TARGET path within the wheel (relative to wheel root).
-# The value is the SOURCE path relative to the project root.
-force-include = { "library" = "/library" }
+# The key is the SOURCE path relative to the project root.
+# The value is the TARGET path within the wheel (relative to wheel root).
+force-include = { "library" = "/vinery/library" }
 
 [tool.hatch.envs.test]
 dependencies = [
