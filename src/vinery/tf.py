@@ -52,13 +52,25 @@ def select_workspace(workspace: str, runner: str) -> int:
 
 
 def option_var_files(path_to_library: str, path_to_plan: str) -> str:
+    """
+    Commands are executed from the `path_to_plan` directory.
+    The global.tfvars file is located in the library directory.
+    The {workspace}.tfvars file is located in the plan directory.
+    """
     path_global_tfvars = os.path.join(path_to_library, "global.tfvars")
     path_workspace_tfvars = os.path.join(path_to_plan, f"{os.getenv('TF_VAR_workspace')}.tfvars")
 
     # Compute relative path to global.tfvars from the `cwd` (chdir) target
     path_from_plan_to_global_tfvars = os.path.relpath(path_global_tfvars, start=path_to_plan)
 
-    return f'-var-file="{path_from_plan_to_global_tfvars}" -var-file="{path_workspace_tfvars}"'
+    option_var_file_global = '-var-file="{path_from_plan_to_global_tfvars}"'
+    if os.path.exists(path_workspace_tfvars):
+        # By checking if the file exists,
+        # error handling is delegated to the runner,
+        # which will fail if variables are missing.
+        return option_var_file_global + f' -var-file="{path_workspace_tfvars}"'
+    else:
+        return option_var_file_global
 
 
 def tf(
