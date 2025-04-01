@@ -1,8 +1,8 @@
 import click
+import os
 from typing import Literal
 from vinery.dependency_graph import DependencyGraph
 from vinery.io import echo
-from vinery.tf import select_workspace
 
 
 def option_path_to_library(function: callable):    
@@ -91,6 +91,7 @@ def option_workspace(function: callable):
         
         ctx.ensure_object(dict)
         ctx.obj["workspace"] = value
+        os.environ[f"TF_VAR_workspace"] = value
         
         return value
 

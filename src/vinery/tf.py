@@ -51,6 +51,16 @@ def select_workspace(workspace: str, runner: str) -> int:
         return 1
 
 
+def option_var_files(path_to_library: str, path_to_plan: str) -> str:
+    path_global_tfvars = os.path.join(path_to_library, "global.tfvars")
+    path_workspace_tfvars = os.path.join(path_to_plan, f"{os.getenv('TF_VAR_workspace')}.tfvars")
+
+    # Compute relative path to global.tfvars from the `cwd` (chdir) target
+    path_from_plan_to_global_tfvars = os.path.relpath(path_global_tfvars, start=path_to_plan)
+
+    return f'-var-file="{path_from_plan_to_global_tfvars}" -var-file="{path_workspace_tfvars}"'
+
+
 def tf(
     plan: str,
     runner: str,
@@ -58,14 +68,16 @@ def tf(
     path_to_library: str,
     save_output: bool = False,
 ) -> int:
-    cmd = f"{runner} {cmd}"
+    path_to_plan = os.path.join(path_to_library, plan)
+
+    cmd = f"{runner} {cmd} {option_var_files(path_to_library, path_to_plan)}"
     echo(f"tf('{plan}', '{cmd}', '{path_to_library}', {save_output})", log_level="DEBUG")
     echo(f"Running command '{cmd}' for plan '{plan}'.", log_level="INFO")
     
     try:
         output = subprocess.run(
             args=cmd,
-            cwd=os.path.join(path_to_library, plan),
+            cwd=path_to_plan,
             check=True,
             capture_output=save_output,
             shell=True,
@@ -142,7 +154,9 @@ def validate(graph_of_plans_initialized, path_to_library, runner, json) -> Depen
 def plan(graph_of_plans_initialized, path_to_library, runner) -> DependencyGraph:
     return tf_loop(
         graph_of_plans_initialized,
-        runner, "plan", path_to_library,
+        runner,
+        "plan",
+        path_to_library,
     )
 
 
@@ -150,7 +164,9 @@ def plan(graph_of_plans_initialized, path_to_library, runner) -> DependencyGraph
 def apply(graph_of_plans_initialized, path_to_library, runner, auto_approve) -> DependencyGraph:
     return tf_loop(
         graph_of_plans_initialized,
-        runner, f"apply{' -auto-approve' if auto_approve else ''}", path_to_library,
+        runner,
+        f"apply{' -auto-approve' if auto_approve else ''}",
+        path_to_library,
     )
 
 
