@@ -1,3 +1,13 @@
+variable "global" {
+  type = object({
+    region = string
+  })
+}
+
+variable "project" {
+  type = string
+}
+
 variable "accounts" {
   description = "A map of account configurations"
   type = map(object({
