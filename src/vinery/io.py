@@ -76,6 +76,14 @@ def update_file(filename: str, new_lines: list[str], dir: str = 'tmp') -> set[st
         f.writelines(contents)
 
 
+def read_dependencies_in_directory(directory: str) -> set[str]:
+    with open(f"{directory}/_deps.conf", "r") as f:
+        return [line.strip().strip("/") for line in f if (
+            line.strip().strip("/")
+            and not line.startswith("#")  # Ignore comments
+        )]
+
+
 def echo(message: str, log_level: str = "INFO") -> None:
     """
     Custom logging function with color-coded output.

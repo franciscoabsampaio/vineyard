@@ -1,7 +1,7 @@
 import os
 import subprocess
 from vinery.dependency_graph import DependencyGraph
-from vinery.io import read_file, update_file, echo
+from vinery.io import read_file, update_file, echo, read_dependencies_in_directory
 
 SUPPORTED_RUNNERS=["terraform", "tofu"]
 
@@ -56,21 +56,23 @@ def option_var_files(path_to_library: str, path_to_plan: str) -> str:
     Commands are executed from the `path_to_plan` directory.
     The global.tfvars file is located in the library directory.
     The {workspace}.tfvars file is located in the plan directory.
+    The variables from parent plans are located in the respective directories.
     """
-    path_global_tfvars = os.path.join(path_to_library, "global.tfvars")
-    path_workspace_tfvars = os.path.join(path_to_plan, f"{os.getenv('TF_VAR_workspace')}.tfvars")
+    path_from_plan_to_library_root = os.path.relpath(path_to_library, start=path_to_plan)
 
-    # Compute relative path to global.tfvars from the `cwd` (chdir) target
-    path_from_plan_to_global_tfvars = os.path.relpath(path_global_tfvars, start=path_to_plan)
+    # -var-files
+    var_files = [f'-var-file="{path_from_plan_to_library_root}/global.tfvars"'] + [
+        f'-var-file="{path_from_plan_to_library_root}/{dep}/output.json"'
+        for dep in read_dependencies_in_directory(path_to_plan)
+    ]
+    # By checking if the file exists,
+    # error handling is delegated to the runner,
+    # which will fail if variables are missing.
+    file_name_workspace_tfvars = f"{os.getenv('TF_VAR_workspace')}.tfvars"
+    if os.path.exists(os.path.join(path_to_plan, file_name_workspace_tfvars)):
+        var_files.append(f'-var-file="{file_name_workspace_tfvars}"')
 
-    option_var_file_global = '-var-file="{path_from_plan_to_global_tfvars}"'
-    if os.path.exists(path_workspace_tfvars):
-        # By checking if the file exists,
-        # error handling is delegated to the runner,
-        # which will fail if variables are missing.
-        return option_var_file_global + f' -var-file="{path_workspace_tfvars}"'
-    else:
-        return option_var_file_global
+    return ' '.join(var_files)
 
 
 def tf(
@@ -79,16 +81,23 @@ def tf(
     cmd: str,
     path_to_library: str,
     save_output: bool = False,
+    skip_var_files: bool = False,
 ) -> int:
-    path_to_plan = os.path.join(path_to_library, plan)
-
-    cmd = f"{runner} {cmd} {option_var_files(path_to_library, path_to_plan)}"
+    cmd = f"{runner} {cmd}"
     echo(f"tf('{plan}', '{cmd}', '{path_to_library}', {save_output})", log_level="DEBUG")
     echo(f"Running command '{cmd}' for plan '{plan}'.", log_level="INFO")
-    
+
+    if not skip_var_files:
+        path_to_plan = os.path.join(path_to_library, plan)
+        cmd_with_var_files_and_output = ' '.join([
+            cmd,
+            option_var_files(path_to_library, path_to_plan),
+            f"&& {runner} output -json | jq 'map_values(.value)' > output.json"
+        ])
+    print(cmd_with_var_files_and_output)
     try:
         output = subprocess.run(
-            args=cmd,
+            args=cmd_with_var_files_and_output,
             cwd=path_to_plan,
             check=True,
             capture_output=save_output,
@@ -114,10 +123,16 @@ def tf_loop(
     reverse: bool = False,
     **kwargs
 ) -> DependencyGraph:
-    return graph_of_plans_to_run.wsubgraph({
-        plan for plan in graph_of_plans_to_run.sorted_list(reverse)
-        if tf(plan, *args, **kwargs) == 0
-    })
+    set_of_plans_completed = set()
+
+    for plan in graph_of_plans_to_run.sorted_list(reverse):
+        exit_code = tf(plan, *args, **kwargs)
+        if exit_code != 0:
+            break
+        else:
+            set_of_plans_completed.add(plan)
+
+    return graph_of_plans_to_run.wsubgraph(set_of_plans_completed)
 
 
 def init(graph_of_plans, path_to_library, runner, upgrade) -> DependencyGraph:
@@ -186,5 +201,9 @@ def apply(graph_of_plans_initialized, path_to_library, runner, auto_approve) -> 
 def destroy(graph_of_plans_initialized, path_to_library, runner, auto_approve) -> DependencyGraph:
     return tf_loop(
         graph_of_plans_initialized,
-        runner, f"destroy{' -auto-approve' if auto_approve else ''}", path_to_library, reverse=True,
+        runner,
+        f"destroy{' -auto-approve' if auto_approve else ''}",
+        path_to_library,
+        reverse=True,
+        skip_var_files=True
     )

@@ -3,6 +3,7 @@ outputs/
 outputs/*
 **/outputs/
 **/outputs/*
+**/output.json
 
 # .env
 .env
