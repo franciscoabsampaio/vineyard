@@ -3,7 +3,7 @@ from collections import deque
 import matplotlib.pyplot as plt
 import networkx as nx
 import os
-from vinery.io import DIRECTORIES, echo, read_dependencies_in_directory
+from vinery.io import DIRECTORIES, echo, read_deps_conf
 
 
 class DependencyGraph(nx.DiGraph):
@@ -37,7 +37,7 @@ class DependencyGraph(nx.DiGraph):
                 plan_name = root.split(path_to_library)[-1].strip("/")
                 self.add_node(plan_name)
 
-                for dependency in read_dependencies_in_directory(root):
+                for dependency in read_deps_conf(root):
                     self.add_edge(dependency, plan_name)
         
         return self

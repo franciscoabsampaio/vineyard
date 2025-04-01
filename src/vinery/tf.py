@@ -1,7 +1,7 @@
 import os
 import subprocess
 from vinery.dependency_graph import DependencyGraph
-from vinery.io import read_file, update_file, echo, read_dependencies_in_directory
+from vinery.io import read_file, update_file, echo, read_deps_conf
 
 SUPPORTED_RUNNERS=["terraform", "tofu"]
 
@@ -63,7 +63,7 @@ def option_var_files(path_to_library: str, path_to_plan: str) -> str:
     # -var-files
     var_files = [f'-var-file="{path_from_plan_to_library_root}/global.tfvars"'] + [
         f'-var-file="{path_from_plan_to_library_root}/{dep}/output.json"'
-        for dep in read_dependencies_in_directory(path_to_plan)
+        for dep in read_deps_conf(path_to_plan)
     ]
     # By checking if the file exists,
     # error handling is delegated to the runner,
