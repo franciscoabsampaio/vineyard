@@ -11,7 +11,7 @@ OPTIONS_TF_VARS = {}
 for name, (description, default) in TF_VARS.items():
     def _option_tf_var(function: callable):
         def callback(ctx, param, value):
-            os.environ[f"TF_VAR_{name.upper()}"] = value
+            os.environ[f"TF_VAR_{name}"] = value
             return value
         
         return click.option(
@@ -19,7 +19,7 @@ for name, (description, default) in TF_VARS.items():
             help=description,
             callback=callback,
             default=default,
-            envvar=f"TF_VAR_{name.upper()}",
+            envvar=f"TF_VAR_{name}",
             required=True,
             show_default=True,
         )(function)
