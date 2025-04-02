@@ -1,17 +1,12 @@
-from vinery.io import DIRECTORIES, setup_directories, set_log_level, setup_library, echo
+from vinery.dependency_graph import DependencyGraph
+from vinery.io import DIRECTORIES, setup_directories, setup_library, echo
 import os
 
 
-def setup(ctx, log_level: str, path_to_library: str, directories: str = DIRECTORIES) -> None:
+def setup(ctx, path_to_library: str, directories: str = DIRECTORIES) -> None:
     """
     Set up the vinery CLI.
     """
-    try:
-        set_log_level(log_level)
-    except ValueError as e:
-        echo(str(e), log_level="ERROR")
-        ctx.exit(1)
-
     if all([os.path.isdir(dir) for dir in directories.values()]):
         echo(f"Working directories already exist.", log_level="DEBUG")
     else:
@@ -27,6 +22,5 @@ def setup(ctx, log_level: str, path_to_library: str, directories: str = DIRECTOR
             echo(str(e), log_level="ERROR")
             ctx.exit(1)
         echo(f"Library plans copied to {path_to_library}.", log_level="INFO")
-
-    echo(f"--log-level: {log_level}", log_level="DEBUG")
-    echo(f"--path-to-library: {path_to_library}", log_level="DEBUG")
+    
+    ctx.obj["graph"] = DependencyGraph().from_library(ctx.obj["path_to_library"])

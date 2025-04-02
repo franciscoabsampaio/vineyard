@@ -2,7 +2,7 @@ import os
 from vinery.cli import cli
 
 
-def test_cli_with_default_log_level(runner, monkeypatch):
+def test_cli_log_level(runner, monkeypatch):
     """Test the CLI command with provided log_level and path_to_library"""
     monkeypatch.delenv("VINE_LOG_LEVEL", raising=False)
     
@@ -24,10 +24,9 @@ def test_cli_with_default_path_to_library(runner, monkeypatch):
 
 def test_cli_with_log_level_and_path(runner, tmp_path, monkeypatch):
     # Assert log_level and path_to_library are set correctly
-    monkeypatch.delenv("VINE_LOG_LEVEL", "DEBUG")
+    monkeypatch.delenv("VINE_LOG_LEVEL")
 
     result = runner.invoke(cli.cli, ['-l', 'DEBUG', '-p', tmp_path, 'version'])
-    print(result.output)
     assert result.exit_code == 0
     assert '--log-level: DEBUG' in result.output
     assert f'--path-to-library: {tmp_path}' in result.output

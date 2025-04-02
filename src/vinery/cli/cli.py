@@ -2,8 +2,7 @@ import click
 import collections
 import vinery.cli.commands as cmd
 from vinery.cli.options import option_path_to_library
-from vinery.io import LOG_LEVELS
-from vinery.cli.setup import setup
+from vinery.io import LOG_LEVELS, set_log_level, echo
 
 
 class OrderedGroup(click.Group):
@@ -24,9 +23,21 @@ class OrderedGroup(click.Group):
         return self.commands.keys()  # Use the keys for listing the commands in order
 
 
+def callback_log_level(ctx, param, value):
+    try:
+        set_log_level(value)
+        echo(f"--log-level: {value}", log_level="DEBUG")
+    except ValueError as e:
+        echo(str(e), log_level="ERROR")
+        ctx.exit(1)
+        
+    return value
+
+
 @click.group(cls=OrderedGroup)
 @click.option(
     '--log-level', '-l', '-log-level',
+    callback=callback_log_level,
     default="INFO",
     envvar="VINE_LOG_LEVEL",
     help=f"""
@@ -43,4 +54,4 @@ def cli(ctx, log_level: str, path_to_library: str):
     """
     Manage infrastructure plans.
     """
-    setup(ctx, log_level, path_to_library)
+    pass

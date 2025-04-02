@@ -9,14 +9,16 @@ def option_path_to_library(function: callable):
     def callback(ctx, param, value):
         ctx.ensure_object(dict)
         ctx.obj["path_to_library"] = value
-        ctx.obj["graph"] = DependencyGraph().from_library(value)
+        
+        os.environ["VINE_PATH_TO_LIBRARY"] = value
+        echo(f"--path-to-library: {value}", log_level="DEBUG")
         return value
 
     return click.option(
         '--path-to-library', '-p', '-path-to-library',
         callback=callback,
         default='./library',
-        envvar='VINERY_PATH_TO_LIBRARY',
+        envvar='VINE_PATH_TO_LIBRARY',
         help='Path to the directory with all infrastructure plans.',
         required=True,
         show_default=True,
@@ -46,13 +48,16 @@ def option_runner(function: callable):
         
         ctx.ensure_object(dict)
         ctx.obj['runner'] = value
+
+        os.environ["VINE_RUNNER"] = value
+        echo(f"--runner: {value}", log_level="DEBUG")
         return value
 
     return click.option(
         '--runner', '-r', '-runner',
         help='Select the preferred runner for managing infrastructure.',
         default='terraform',
-        envvar='VINERY_RUNNER',
+        envvar='VINE_RUNNER',
         show_default=True,
         callback=callback
     )(function)

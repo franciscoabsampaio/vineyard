@@ -5,6 +5,7 @@ import subprocess
 from vinery.cli.arguments import argument_plan
 from vinery.cli.options import options_init, option_runner, option_auto_approve
 from vinery.cli.options_tf_vars import options_tf_vars
+from vinery.cli.setup import setup
 from vinery.dependency_graph import DependencyGraph
 from vinery.io import echo
 import vinery.tf as tf
@@ -63,8 +64,9 @@ def fmt(ctx, runner: str):
 @click.pass_context
 def init(ctx, plan: str, runner: str, recursive: bool, upgrade: bool, workspace: str):
     """
-    Initialize all infrastructure plans.
+    Initialize the library and targeted plans.
     """
+    setup(ctx, ctx.obj["path_to_library"])
     callback(ctx)
     tf.init(ctx.obj["graph"], ctx.obj["path_to_library"], runner, upgrade)
 
