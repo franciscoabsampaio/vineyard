@@ -22,5 +22,3 @@ def setup(ctx, path_to_library: str, directories: str = DIRECTORIES) -> None:
             echo(str(e), log_level="ERROR")
             ctx.exit(1)
         echo(f"Library plans copied to {path_to_library}.", log_level="INFO")
-    
-    ctx.obj["graph"] = DependencyGraph().from_library(ctx.obj["path_to_library"])

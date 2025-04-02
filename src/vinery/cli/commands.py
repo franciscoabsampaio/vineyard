@@ -15,8 +15,11 @@ import vinery
 def callback(ctx):
     tf.select_workspace(ctx.obj['workspace'], ctx.obj['runner'])
 
-    # Trim dependency graph up to target node plan
+    # Create dependency graph
     ctx.ensure_object(dict)
+    ctx.obj["graph"] = DependencyGraph().from_library(ctx.obj["path_to_library"])
+
+    # Trim dependency graph up to target node plan
     plan = ctx.obj['plan']
     try:
         ctx.obj["graph"] = (
@@ -25,13 +28,6 @@ def callback(ctx):
     except networkx.exception.NetworkXError:
         echo(f"Invalid plan(s) provided: {plan}", log_level="ERROR")
         ctx.exit(1)
-
-    # Check if workspace tfvars files exist for each node in the graph
-    workspace = ctx.obj["workspace"]
-    for node in ctx.obj["graph"].nodes:
-        if not os.path.isfile(os.path.join(ctx.obj["path_to_library"], node, f"{workspace}.tfvars")):
-            echo(f"'{workspace}.tfvars' file not found in '{node}'.", log_level="ERROR")
-            ctx.exit(1)
 
 
 ########################
@@ -86,7 +82,7 @@ def init(ctx, plan: str, runner: str, recursive: bool, upgrade: bool, workspace:
     """
 )
 @click.pass_context
-def validate(ctx, plan: str, runner: str, recursive: bool, upgrade: bool, json: bool):
+def validate(ctx, plan: str, runner: str, recursive: bool, upgrade: bool, workspace: str, json: bool):
     """
     Validate plans' syntax and correctness.
     By default, runs 'RUNNER init -upgrade' prior to execution.
