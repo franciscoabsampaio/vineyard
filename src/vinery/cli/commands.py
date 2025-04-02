@@ -1,6 +1,5 @@
 import click
 import networkx
-import os
 import subprocess
 from vinery.cli.arguments import argument_plan
 from vinery.cli.options import options_init, option_runner, option_auto_approve

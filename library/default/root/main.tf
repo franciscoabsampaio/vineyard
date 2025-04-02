@@ -8,7 +8,7 @@ locals {
 
 resource "azurerm_resource_group" "ws" {
   name     = "${local.prefix}-rg"
-  location = var.global.region
+  location = var.region
 
   tags = {
     Environment = terraform.workspace
