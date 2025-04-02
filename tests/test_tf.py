@@ -1,7 +1,7 @@
 import pytest
 import subprocess
 from unittest.mock import patch, MagicMock
-from vinery.tf import SUPPORTED_RUNNERS, RunnerNotFoundError, load_runners, tf
+from vinery.tf import SUPPORTED_RUNNERS, load_runners, tf
 
 
 def test_load_runners_at_least_one_runner():
@@ -48,7 +48,7 @@ def test_tf_success(mock_subprocess_run, mock_update_file, mock_read_deps_conf, 
 
     assert result == 0, "Expected return code 0 for success"
     mock_subprocess_run.assert_called_once()
-    mock_echo.assert_any_call("Command 'my_runner my_cmd' for plan 'my_plan' was successful!", log_level="SUCCESS")
+    mock_echo.assert_any_call("Command 'my_runner my_cmd -var-file=\"../global.tfvars\" && my_runner output -json | jq 'map_values(.value)' > output.json' for plan 'my_plan' was successful!", log_level="SUCCESS")
 
 
 def test_tf_failure(mock_subprocess_run, mock_update_file, mock_read_deps_conf, mock_echo):
@@ -59,7 +59,7 @@ def test_tf_failure(mock_subprocess_run, mock_update_file, mock_read_deps_conf, 
 
     assert result == 1, "Expected return code 1 for failure"
     mock_subprocess_run.assert_called_once()
-    mock_echo.assert_any_call("Command 'my_runner my_cmd' failed for plan my_plan!", log_level="ERROR")
+    mock_echo.assert_any_call("Command 'my_runner my_cmd -var-file=\"../global.tfvars\" && my_runner output -json | jq 'map_values(.value)' > output.json' failed for plan my_plan!", log_level="ERROR")
 
 
 def test_tf_save_output(mock_subprocess_run, mock_update_file, mock_read_deps_conf, mock_echo):
@@ -72,4 +72,4 @@ def test_tf_save_output(mock_subprocess_run, mock_update_file, mock_read_deps_co
     mock_update_file.assert_called_once_with(
         "my_cmd_my_plan.log", ["Saved output"], dir="output"
     )
-    mock_echo.assert_any_call("Command 'my_runner my_cmd' for plan 'my_plan' was successful!", log_level="SUCCESS")
+    mock_echo.assert_any_call("Command 'my_runner my_cmd -var-file=\"../global.tfvars\" && my_runner output -json | jq 'map_values(.value)' > output.json' for plan 'my_plan' was successful!", log_level="SUCCESS")

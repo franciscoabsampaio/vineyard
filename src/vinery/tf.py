@@ -87,17 +87,17 @@ def tf(
     echo(f"tf('{plan}', '{cmd}', '{path_to_library}', {save_output})", log_level="DEBUG")
     echo(f"Running command '{cmd}' for plan '{plan}'.", log_level="INFO")
 
+    path_to_plan = os.path.join(path_to_library, plan)
     if not skip_var_files:
-        path_to_plan = os.path.join(path_to_library, plan)
-        cmd_with_var_files_and_output = ' '.join([
+        cmd = ' '.join([
             cmd,
             option_var_files(path_to_library, path_to_plan),
             f"&& {runner} output -json | jq 'map_values(.value)' > output.json"
         ])
-    print(cmd_with_var_files_and_output)
+
     try:
         output = subprocess.run(
-            args=cmd_with_var_files_and_output,
+            args=cmd,
             cwd=path_to_plan,
             check=True,
             capture_output=save_output,
@@ -174,6 +174,7 @@ def validate(graph_of_plans_initialized, path_to_library, runner, json) -> Depen
         graph_of_plans_initialized,
         runner, f"validate{' -json' if json else ''}", path_to_library,
         save_output=json,
+        skip_var_files=True
     )
 
 

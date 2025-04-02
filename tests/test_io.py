@@ -49,10 +49,10 @@ def test_read_file_not_found(directories_mock, monkeypatch):
 def test_read_file_success(setup_tmp_dir, directories_mock, monkeypatch):
     monkeypatch.setattr("vinery.io.DIRECTORIES", directories_mock)
     filename = setup_tmp_dir / "test.txt"
-    filename.write_text("line1\nline2\n")
+    filename.write_text("\n\nline1\nline2\n")
 
     result = io.read_file(filename)
-    assert result == {"line1\n", "line2\n"}
+    assert result == {"line1", "line2"}
 
 
 def test_update_file(setup_tmp_dir, directories_mock, monkeypatch):
@@ -62,12 +62,12 @@ def test_update_file(setup_tmp_dir, directories_mock, monkeypatch):
     
     # Verify file contents
     result = io.read_file(filename)
-    assert result == {"new_line1\n", "new_line2\n"}
+    assert result == {"new_line1", "new_line2"}
     
     # Append more lines and check
     io.update_file(filename, ["extra_line\n"])
     result = io.read_file(filename)
-    assert result == {"new_line1\n", "new_line2\n", "extra_line\n"}
+    assert result == {"new_line1", "new_line2", "extra_line"}
 
 
 def test_echo_suppressed(capsys, monkeypatch):

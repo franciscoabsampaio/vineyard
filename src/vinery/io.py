@@ -60,7 +60,7 @@ def setup_library(path_to_library: str) -> None:
 def read_file(filename: str, dir: str = 'tmp') -> set[str]:
     try:
         with open(os.path.join(DIRECTORIES[dir], filename), "r") as f:
-            return set(f.readlines())
+            return set(line.strip() for line in f.readlines() if line.strip())
     except FileNotFoundError:
         echo(f"File {filename} not found in {DIRECTORIES[dir]}.", log_level="WARNING")
         return set()
@@ -73,7 +73,7 @@ def update_file(filename: str, new_lines: list[str], dir: str = 'tmp') -> set[st
         contents.add(line)
     
     with open(os.path.join(DIRECTORIES[dir], filename), "w") as f:
-        f.writelines(contents)
+        f.writelines(line + '\n' for line in contents)
 
 
 def read_deps_conf(directory: str) -> set[str]:

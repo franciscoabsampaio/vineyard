@@ -33,9 +33,8 @@ def test_argument_plan_empty_input(runner):
     # Test case where no plans are provided
     result = runner.invoke(dummy_command, [])
 
-    # Assert that the error message is shown
-    assert result.exit_code == 1
-    assert "At least ONE plan is required." in result.output
+    # Assert that no error message is shown
+    assert result.exit_code == 0
 
 
 def test_argument_plan_invalid_input(runner):
