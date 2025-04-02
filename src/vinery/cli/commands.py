@@ -20,6 +20,7 @@ def callback(ctx):
     ctx.obj["graph"] = DependencyGraph().from_library(ctx.obj["path_to_library"])
 
     # Trim dependency graph up to target node plan
+    # If no plan is provided, the entire graph is used
     plan = ctx.obj['plan']
     if plan:
         try:
