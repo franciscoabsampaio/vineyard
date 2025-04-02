@@ -21,13 +21,14 @@ def callback(ctx):
 
     # Trim dependency graph up to target node plan
     plan = ctx.obj['plan']
-    try:
-        ctx.obj["graph"] = (
-            ctx.obj["graph"].from_nodes_wsubgraph(plan)
-        ) if ctx.obj["recursive"] else DependencyGraph().from_nodes(plan)
-    except networkx.exception.NetworkXError:
-        echo(f"Invalid plan(s) provided: {plan}", log_level="ERROR")
-        ctx.exit(1)
+    if plan:
+        try:
+            ctx.obj["graph"] = (
+                ctx.obj["graph"].from_nodes_wsubgraph(plan)
+            ) if ctx.obj["recursive"] else DependencyGraph().from_nodes(plan)
+        except networkx.exception.NetworkXError:
+            echo(f"Invalid plan(s) provided: {plan}", log_level="ERROR")
+            ctx.exit(1)
 
 
 ########################
